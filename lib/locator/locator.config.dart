@@ -18,9 +18,10 @@ import '../features/auth/data/datasources/remote/auth_api_service.dart' as _i8;
 import '../features/auth/data/repositories/auth_repository_impl.dart' as _i11;
 import '../features/auth/domain/repositories/auth_repository.dart' as _i10;
 import '../features/auth/domain/usecases/log_out.dart' as _i13;
+import '../features/auth/domain/usecases/sign_in_with_google.dart'
+    as _i14;
 import '../features/auth/domain/usecases/sign_in_with_email_and_password.dart'
     as _i12;
-import '../features/auth/domain/usecases/sign_in_with_google.dart' as _i14;
 import '../features/auth/domain/usecases/sign_up_with_email_and_password.dart'
     as _i15;
 import '../features/auth/presentation/bloc/app_status/app_bloc.dart' as _i16;

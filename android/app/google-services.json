@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "172862515978",
+    "project_id": "fatora",
+    "storage_bucket": "fatora.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172862515978:android:000dc8336d511ba1d8e8f3",
+        "android_client_info": {
+          "package_name": "com.example.fatora"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "172862515978-q1sr518vjkf07i6ts195f1vqisrq6dab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fatora",
+            "certificate_hash": "e52dabdf0a65651df377e860744cb82f43e150e6"
+          }
+        },
+        {
+          "client_id": "172862515978-7j2283eumbj8010s798v86sbtjdlif6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeFXd1-1PXmv2iLwJet_y7sdMEk5B6P8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "172862515978-7j2283eumbj8010s798v86sbtjdlif6j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
