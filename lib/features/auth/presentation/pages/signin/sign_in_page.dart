@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../bloc/sign_in/sign_in_cubit.dart';
-import 'widgets/login_form.dart';
+import 'widgets/sign_in_form.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -17,8 +17,12 @@ class SignInPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: BlocProvider(
-          create: (_) => SignInCubit(locator()),
-          child: const LoginForm(),
+          create: (_) => SignInCubit(
+            signInWithEmailAndPassword: locator(),
+            signInWithGoogle: locator(),
+            signInWithFacebook: locator(),
+          ),
+          child: const SignInForm(),
         ),
       ),
     );

@@ -6,12 +6,12 @@ import 'package:fatora/features/auth/domain/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton()
-class SignInWithGoogle implements UseCase<void, NoArgsParams> {
+class SignInWithFacebook implements UseCase<void, NoArgsParams> {
   final AuthRepository repository;
-  SignInWithGoogle(this.repository);
+  SignInWithFacebook(this.repository);
 
   @override
   Future<Either<Failure, void>> call({required NoArgsParams params}) {
-    return repository.signInWithGoogle();
+    return repository.signInWithFacebook();
   }
 }

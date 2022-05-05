@@ -1,3 +1,4 @@
+import 'package:fatora/core/errors/exceptions/auth/google_sign_in_exceptions.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_in/sign_in_cubit.dart';
 import 'package:fatora/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({Key? key}) : super(key: key);
+class SignInForm extends StatelessWidget {
+  const SignInForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +41,8 @@ class LoginForm extends StatelessWidget {
               _LoginButton(),
               const SizedBox(height: 8),
               _GoogleLoginButton(),
+              const SizedBox(height: 8),
+              _FacebookLoginButton(),
               const SizedBox(height: 4),
               _SignUpButton(),
             ],
@@ -85,7 +88,9 @@ class _PasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'password',
             helperText: '',
-            errorText: state.password.invalid ? 'password must be at least 8 characters' : null,
+            errorText: state.password.invalid
+                ? 'password must be at least 8 characters'
+                : null,
           ),
         );
       },
@@ -110,7 +115,8 @@ class _LoginButton extends StatelessWidget {
                   primary: const Color(0xFFFFD600),
                 ),
                 onPressed: state.status.isValidated
-                    ? () => context.read<SignInCubit>().signInWithCredentials()
+                    ? () =>
+                        context.read<SignInCubit>().signInWithEmailAndPassword()
                     : null,
                 child: const Text('LOGIN'),
               );
@@ -136,7 +142,29 @@ class _GoogleLoginButton extends StatelessWidget {
         primary: theme.colorScheme.secondary,
       ),
       icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
-      onPressed: () {},
+      onPressed: context.read<SignInCubit>().signInWithGoogle,
+    );
+  }
+}
+
+class _FacebookLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ElevatedButton.icon(
+      key: const Key('loginForm_facebookLogin_raisedButton'),
+      label: const Text(
+        'SIGN IN WITH FACEBOOK',
+        style: TextStyle(color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        primary: theme.colorScheme.secondary,
+      ),
+      icon: const Icon(FontAwesomeIcons.facebook, color: Colors.white),
+      onPressed: context.read<SignInCubit>().signInWithFacebook,
     );
   }
 }

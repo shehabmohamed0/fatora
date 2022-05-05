@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
+import '../../../../../../widgets/bloc_text_field.dart';
+
 class SignUpForm extends StatelessWidget {
   const SignUpForm({Key? key}) : super(key: key);
 
@@ -22,89 +24,119 @@ class SignUpForm extends StatelessWidget {
       },
       child: Align(
         alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _EmailInput(),
-            const SizedBox(height: 8),
-            _PasswordInput(),
-            const SizedBox(height: 8),
-            _ConfirmPasswordInput(),
-            const SizedBox(height: 8),
-            _SignUpButton(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const _FirstNameTextField(),
+              const _FirstNameTextField(),
+              const SizedBox(height: 8),
+              const _PasswordTextField(),
+              const SizedBox(height: 8),
+              const _PhoneNumberTextField(),
+              const SizedBox(height: 8),
+              const _EmailTextField(),
+              const SizedBox(height: 8),
+              _SignUpButton(),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _EmailInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen: (previous, current) => previous.email != current.email,
-      builder: (context, state) {
-        return TextField(
-          key: const Key('signUpForm_emailInput_textField'),
-          onChanged: (email) => context.read<SignUpCubit>().emailChanged(email),
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            labelText: 'email',
-            helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
-          ),
-        );
-      },
-    );
-  }
-}
+class _EmailTextField extends StatelessWidget {
+  const _EmailTextField({
+    Key? key,
+  }) : super(key: key);
 
-class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen: (previous, current) => previous.password != current.password,
-      builder: (context, state) {
-        return TextField(
-          key: const Key('signUpForm_passwordInput_textField'),
-          onChanged: (password) =>
-              context.read<SignUpCubit>().passwordChanged(password),
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: 'password',
-            helperText: '',
-            errorText: state.password.invalid ? 'password must be at least 8 characters' : null,
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _ConfirmPasswordInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignUpCubit, SignUpState>(
+    return BlocTextFieldInput<SignUpCubit, SignUpState>(
+      labelText: 'email',
+      helperText: '',
+      errorText: (state) => state.email.invalid ? 'invalid email' : null,
+      keyboaedType: TextInputType.emailAddress,
       buildWhen: (previous, current) =>
-          previous.password != current.password ||
-          previous.confirmedPassword != current.confirmedPassword,
-      builder: (context, state) {
-        return TextField(
-          key: const Key('signUpForm_confirmedPasswordInput_textField'),
-          onChanged: (confirmPassword) => context
-              .read<SignUpCubit>()
-              .confirmedPasswordChanged(confirmPassword),
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: 'confirm password',
-            helperText: '',
-            errorText: state.confirmedPassword.invalid
-                ? 'passwords do not match'
-                : null,
-          ),
-        );
+          previous.email.status != current.password.status,
+      onChanged: (bloc, email) => bloc.emailChanged(email),
+    );
+  }
+}
+
+class _PhoneNumberTextField extends StatelessWidget {
+  const _PhoneNumberTextField({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocTextFieldInput<SignUpCubit, SignUpState>(
+      labelText: 'phone number',
+      helperText: '',
+      errorText: (state) =>
+          state.phoneNumber.invalid ? 'invalid phone number' : null,
+      buildWhen: (previous, current) =>
+          previous.phoneNumber != current.phoneNumber,
+      onChanged: (bloc, phone) => bloc.phoneChanged(phone),
+    );
+  }
+}
+
+class _PasswordTextField extends StatelessWidget {
+  const _PasswordTextField({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocTextFieldInput<SignUpCubit, SignUpState>(
+      labelText: 'password',
+      helperText: '',
+      isPassword: true,
+      errorText: (state) => state.password.invalid
+          ? 'password must be at least 8 character'
+          : null,
+      buildWhen: (previous, current) =>
+          previous.password.status != current.password.status,
+      onChanged: (bloc, password) => bloc.passwordChanged(password),
+    );
+  }
+}
+
+class _FirstNameTextField extends StatelessWidget {
+  const _FirstNameTextField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocTextFieldInput<SignUpCubit, SignUpState>(
+      labelText: 'First name',
+      buildWhen: (previous, current) =>
+          previous.firstName.status != current.firstName.status,
+      onChanged: (bloc, value) {
+        bloc.firstNameChanged(value);
       },
+      errorText: (state) =>
+          state.firstName.invalid ? 'name can not be empty.' : null,
+    );
+  }
+}
+
+class _SecondNameTextField extends StatelessWidget {
+  const _SecondNameTextField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocTextFieldInput<SignUpCubit, SignUpState>(
+      labelText: 'First name',
+      buildWhen: (previous, current) =>
+          previous.firstName.status != current.firstName.status,
+      onChanged: (bloc, value) {
+        bloc.firstNameChanged(value);
+      },
+      errorText: (state) =>
+          state.firstName.invalid ? 'name can not be empty.' : null,
     );
   }
 }

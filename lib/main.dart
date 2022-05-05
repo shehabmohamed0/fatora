@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:fatora/bloc_observer.dart';
-import 'package:fatora/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
 import 'package:fatora/locator/locator.dart';
 import 'package:fatora/router/router.dart';
@@ -13,26 +14,23 @@ Future<void> main() {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
-     await configureDependencies();
-      final AuthRepository authRepository = locator();
-      await authRepository.user.first;
-      runApp(App(
-        authRepository: locator(),
-      ));
+      await configureDependencies();
+
+      runApp(const App());
     },
     blocObserver: AppBlocObserver(),
   );
 }
 
 class App extends StatelessWidget {
-  final AuthRepository authRepository;
-
-  const App({Key? key, required this.authRepository}) : super(key: key);
+  const App({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AppBloc(authRepository: authRepository),
+      create: (_) => AppBloc(authRepository: locator()),
       child: const AppView(),
     );
   }
@@ -50,6 +48,9 @@ class AppView extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       home: FlowBuilder<AppStatus>(
         state: context.select((AppBloc bloc) => bloc.state.status),
+        onComplete: (d) {
+          log('triggered');
+        },
         onGeneratePages: onGenerateAppViewPages,
       ),
     );

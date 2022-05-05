@@ -1,12 +1,13 @@
 import 'dart:developer';
 
+import 'package:fatora/core/errors/exceptions/auth/google_sign_in_exceptions.dart';
 import 'package:fatora/core/errors/failures/auth/sign_in_with_email_and_password_exception.dart';
+import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
 import 'package:fatora/core/errors/failures/auth/sign_up_with_email_and_password_exception.dart';
-import 'package:fatora/core/params/auth/google_sign_in_params.dart';
+import 'package:fatora/core/params/auth/phone_sign_in_params.dart';
 import 'package:fatora/core/services/network/network_info.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 
-import 'package:fatora/core/errors/exceptions/exceptions.dart';
 import 'package:fatora/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:fatora/features/auth/data/datasources/remote/auth_api_service.dart';
 import 'package:fatora/core/params/auth/sign_up_params.dart';
@@ -29,16 +30,6 @@ class AuthRepositoryImpl implements AuthRepository {
       {required this.authApiService,
       required this.authLocalService,
       required this.networkInfo});
-
-  @override
-  Either<Failure, User> getCurrentUserUser() {
-    try {
-      final user = authLocalService.currentUser();
-      return Right(user);
-    } on CacheException {
-      return Left(CacheFailure());
-    }
-  }
 
   @override
   Future<Either<Failure, void>> signOut() async {
@@ -65,7 +56,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> signUpWithEmailAndPassword(
+  Future<Either<Failure, void>> signUp(
       SignUpParams params) async {
     try {
       await authApiService.signUpWithEmailAndPassword(
@@ -78,13 +69,43 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, void>> signInWithGoogle() async {
+    try {
+      await authApiService.signInWithGoogle();
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      return Left(SignInWithCredential.fromCode(e.code));
+    } on GoogleSignInCanceledException {
+      return Left(GoogleSignInWithGoogleCanceledFailure());
+    } catch (_) {
+      log(_.toString());
+      return const Left(SignInWithCredential());
+    }
+  }
+
+  @override
   Stream<User> get user => authApiService.user;
 
   @override
   User get currentUser => authApiService.currentUser;
 
   @override
-  Future<Either<Failure, void>> signInWithGoogle(GoogleSignInParams params) async {
+  Future<Either<Failure, void>> signInWithFacebook() async {
+    try {
+      await authApiService.signInWithFacebook();
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      return Left(SignInWithCredential.fromCode(e.code));
+    } on GoogleSignInCanceledException {
+      return Left(GoogleSignInWithGoogleCanceledFailure());
+    } catch (_) {
+      log(_.toString());
+      return const Left(SignInWithCredential());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> signInWithPhone(PhoneSignInParams params) {
     throw UnimplementedError();
   }
 }

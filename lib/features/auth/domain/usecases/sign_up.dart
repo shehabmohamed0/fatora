@@ -6,12 +6,12 @@ import 'package:fatora/features/auth/domain/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton()
-class SignUpWithEmailAndPassword implements UseCase<void, SignUpParams> {
+class SignUp implements UseCase<void, SignUpParams> {
   final AuthRepository repository;
-  SignUpWithEmailAndPassword(this.repository);
+  SignUp(this.repository);
 
   @override
   Future<Either<Failure, void>> call({required SignUpParams params}) {
-    return repository.signUpWithEmailAndPassword(params);
+    return repository.signUp(params);
   }
 }

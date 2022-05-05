@@ -1,7 +1,12 @@
-import 'package:fatora/core/params/auth/sign_in_params.dart';
-
 class SignUpParams {
+  final String name;
   final String email;
   final String password;
-  SignUpParams({required this.email, required this.password});
+  final String phoneNumber;
+  SignUpParams({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.phoneNumber,
+  });
 }

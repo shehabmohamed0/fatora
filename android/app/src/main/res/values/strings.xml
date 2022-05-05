@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="facebook_app_id">1143386266248630</string>
+    <string name="fb_login_protocol_scheme">fb1143386266248630</string>
+    <string name="facebook_client_token">eabb91f3dcc5e14c5e4c82cf995b99ef</string>
+    <string name="app_name">fatora</string>
+
+</resources>

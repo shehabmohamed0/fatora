@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 4),
             Text(user.email ?? '', style: textTheme.headline6),
             const SizedBox(height: 4),
-            Text(user.name ?? '', style: textTheme.headline5),
+            Text(user.name, style: textTheme.headline5),
           ],
         ),
       ),
