@@ -10,7 +10,7 @@ class UserModel extends User {
     required String name,
     String? email,
     String? photoURL,
-    required String phoneNumber,
+    String? phoneNumber,
   }) : super(
             id: id,
             name: name,

@@ -119,4 +119,7 @@ class SignInCubit extends Cubit<SignInState> {
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     });
   }
+
+  void signInWithPhone() {
+  }
 }

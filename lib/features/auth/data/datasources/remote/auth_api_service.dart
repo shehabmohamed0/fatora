@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fatora/core/constants/firestore_path.dart';
 import 'package:fatora/core/errors/exceptions/auth/google_sign_in_exceptions.dart';
 import 'package:fatora/features/auth/data/models/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
@@ -8,12 +11,33 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class AuthApiService {
+  Future<void> fullSignUp(
+      {required String name,
+      required String email,
+      required String password,
+      required AuthCredential phoneCredential,
+      required String phoneNumber});
+
+  Future<void> phoneSignUp(
+      {required String name,
+      required AuthCredential phoneCredential,
+      required String phoneNumber});
   Future<void> signInWithEmailAndPassword(String email, String password);
+
   Future<void> signInWithGoogle();
+
   Future<void> signInWithFacebook();
-  Future<void> signUpWithEmailAndPassword(String email, String password);
+  Future<void> verifyPhone({
+    required String phoneNumber,
+    required void Function(PhoneAuthCredential) verificationCompleted,
+    required void Function(FirebaseAuthException) verificationFailed,
+    required void Function(String, int?) codeSent,
+    required void Function(String) codeAutoRetrievalTimeout,
+  });
   Stream<UserModel> get user;
+
   UserModel get currentUser;
+
   Future<void> signOut();
 }
 
@@ -29,6 +53,34 @@ class AuthApiServiceImpl implements AuthApiService {
     required this.facebookAuth,
     required this.firestore,
   });
+
+  @override
+  Future<void> fullSignUp({
+    required String name,
+    required String email,
+    required String password,
+    required AuthCredential phoneCredential,
+    String? phoneNumber,
+  }) async {
+    final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    final userDoc = firestore.doc(FirestorePath.user(userCredential.user!.uid));
+    userCredential.user?.linkWithCredential(phoneCredential);
+    await userDoc
+        .set({'name': name, 'email': email, 'phoneNumber': phoneNumber});
+  }
+
+  @override
+  Future<void> phoneSignUp({
+    required String name,
+    required AuthCredential phoneCredential,
+    required String phoneNumber,
+  }) async {
+    final userCredential =
+        await firebaseAuth.signInWithCredential(phoneCredential);
+    final userDoc = firestore.doc(FirestorePath.user(userCredential.user!.uid));
+    await userDoc.set({'name': name, 'phoneNumber': phoneNumber});
+  }
 
   @override
   Future<void> signInWithEmailAndPassword(String email, String password) async {
@@ -66,12 +118,6 @@ class AuthApiServiceImpl implements AuthApiService {
   }
 
   @override
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
-    await firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-  }
-
-  @override
   Future<void> signOut() async {
     await Future.wait([
       firebaseAuth.signOut(),
@@ -89,5 +135,22 @@ class AuthApiServiceImpl implements AuthApiService {
       final credential = FacebookAuthProvider.credential(accessToken.token);
       await firebaseAuth.signInWithCredential(credential);
     }
+  }
+
+  @override
+  Future<void> verifyPhone({
+    required String phoneNumber,
+    required void Function(PhoneAuthCredential p1) verificationCompleted,
+    required void Function(FirebaseAuthException p1) verificationFailed,
+    required void Function(String p1, int? p2) codeSent,
+    required void Function(String p1) codeAutoRetrievalTimeout,
+  }) async {
+    return firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: verificationCompleted,
+      verificationFailed: verificationFailed,
+      codeSent: codeSent,
+      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+    );
   }
 }

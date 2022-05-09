@@ -16,11 +16,18 @@ class PhoneNumber extends FormzInput<String, PhoneValidationError> {
   /// {@macro phone}
   const PhoneNumber.dirty([String value = '']) : super.dirty(value);
 
+  static final RegExp _phoneRegExp = RegExp(
+    r"^[0-9]+$",
+  );
   @override
   PhoneValidationError? validator(String? value) {
     value ??= '';
-    return (value.startsWith('01') && value.length == 11)
-        ? null
-        : PhoneValidationError.invalid;
+
+    if (_phoneRegExp.hasMatch(value) &&
+        value.startsWith('01') &&
+        value.length == 11) {
+      return null;
+    }
+    return PhoneValidationError.invalid;
   }
 }

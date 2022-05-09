@@ -14,7 +14,7 @@ class BlocTextFieldInput<B extends StateStreamable<S>, S>
     Key? key,
     required this.labelText,
     this.helperText = '',
-    required this.errorText,
+    this.errorText,
     this.isPassword = false,
     required this.buildWhen,
     required this.onChanged,
@@ -71,12 +71,12 @@ class _PasswordTextField extends StatefulWidget {
 }
 
 class _PasswordTextFieldState extends State<_PasswordTextField> {
-  bool obscureText = true;
+  bool showPassword = false;
   @override
   Widget build(BuildContext context) {
     return TextField(
       onChanged: widget.onChanged,
-      obscureText: obscureText,
+      obscureText: !showPassword,
       decoration: InputDecoration(
         labelText: widget.labelText,
         helperText: widget.helperText,
@@ -84,7 +84,7 @@ class _PasswordTextFieldState extends State<_PasswordTextField> {
         suffixIcon: InkWell(
           onTap: toggelPassword,
           child: Icon(
-            obscureText
+            showPassword
                 ? Icons.visibility_off_outlined
                 : Icons.visibility_outlined,
           ),
@@ -94,6 +94,6 @@ class _PasswordTextFieldState extends State<_PasswordTextField> {
   }
 
   void toggelPassword() {
-    setState(() => obscureText = !obscureText);
+    setState(() => showPassword = !showPassword);
   }
 }

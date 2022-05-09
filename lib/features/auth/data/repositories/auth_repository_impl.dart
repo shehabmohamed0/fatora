@@ -5,12 +5,14 @@ import 'package:fatora/core/errors/failures/auth/sign_in_with_email_and_password
 import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
 import 'package:fatora/core/errors/failures/auth/sign_up_with_email_and_password_exception.dart';
 import 'package:fatora/core/params/auth/phone_sign_in_params.dart';
+import 'package:fatora/core/params/auth/phone_sign_up_params.dart';
+import 'package:fatora/core/params/auth/verify_phone_params.dart';
 import 'package:fatora/core/services/network/network_info.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 
 import 'package:fatora/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:fatora/features/auth/data/datasources/remote/auth_api_service.dart';
-import 'package:fatora/core/params/auth/sign_up_params.dart';
+import 'package:fatora/core/params/auth/full_sign_up_params.dart';
 import 'package:fatora/core/params/auth/sign_in_params.dart';
 import 'package:fatora/core/errors/failures/failures.dart';
 
@@ -56,11 +58,29 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> signUp(
-      SignUpParams params) async {
+  Future<Either<Failure, void>> fullSignUp(FullSignUpParams params) async {
     try {
-      await authApiService.signUpWithEmailAndPassword(
-          params.email, params.password);
+      await authApiService.fullSignUp(
+          name: params.name,
+          email: params.email,
+          password: params.password,
+          phoneNumber: params.phoneNumber,
+          phoneCredential: params.phoneCredetial);
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      log('${e.message}');
+      return Left(SignUpWithEmailAndPasswordFailure(e.code));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> phoneSignUp(PhoneSignUpParams params) async {
+    try {
+      await authApiService.phoneSignUp(
+        name: params.name,
+        phoneNumber: params.phoneNumber,
+        phoneCredential: params.phoneCredential,
+      );
       return const Right(null);
     } on FirebaseAuthException catch (e) {
       log('${e.message}');
@@ -107,5 +127,18 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signInWithPhone(PhoneSignInParams params) {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, void>> verifyPhone(VerifyPhoneParams params) async {
+    await authApiService.verifyPhone(
+      
+        phoneNumber: params.phoneNumber,
+        verificationCompleted: params.verificationCompleted,
+        verificationFailed: params.verificationFailed,
+        codeSent: params.codeSent,
+        codeAutoRetrievalTimeout: params.codeAutoRetrievalTimeout);
+
+    return const Right(null);
   }
 }

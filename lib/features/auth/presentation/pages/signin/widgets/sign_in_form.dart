@@ -40,9 +40,10 @@ class SignInForm extends StatelessWidget {
               const SizedBox(height: 8),
               _LoginButton(),
               const SizedBox(height: 8),
-              _GoogleLoginButton(),
-              const SizedBox(height: 8),
-              _FacebookLoginButton(),
+              _PhoneLoginButton(),
+              // _GoogleLoginButton(),
+              // const SizedBox(height: 8),
+              // _FacebookLoginButton(),
               const SizedBox(height: 4),
               _SignUpButton(),
             ],
@@ -165,6 +166,28 @@ class _FacebookLoginButton extends StatelessWidget {
       ),
       icon: const Icon(FontAwesomeIcons.facebook, color: Colors.white),
       onPressed: context.read<SignInCubit>().signInWithFacebook,
+    );
+  }
+}
+
+class _PhoneLoginButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ElevatedButton.icon(
+      key: const Key('loginForm_phoneLogin_raisedButton'),
+      label: const Text(
+        'SIGN IN WITH PHONE',
+        style: TextStyle(color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        primary: theme.colorScheme.secondary,
+      ),
+      icon: const Icon(FontAwesomeIcons.phone, color: Colors.white),
+      onPressed: context.read<SignInCubit>().signInWithPhone,
     );
   }
 }

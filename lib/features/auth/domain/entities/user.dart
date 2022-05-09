@@ -5,14 +5,14 @@ class User extends Equatable {
   final String name;
   final String? email;
   final String? photoURL;
-  final String phoneNumber;
+  final String? phoneNumber;
 
   const User(
       {required this.id,
       required this.name,
-      this.email,
+      required this.email,
       this.photoURL,
-      required this.phoneNumber});
+      this.phoneNumber});
 
   User copyWith({
     String? id,
@@ -30,7 +30,7 @@ class User extends Equatable {
     );
   }
 
-  static const empty = User(id: '', name: '', phoneNumber: '');
+  static const empty = User(id: '', email: '', name: '', phoneNumber: '');
 
   /// Convenience getter to determine whether the current user is empty.
   bool get isEmpty => id.isEmpty;
