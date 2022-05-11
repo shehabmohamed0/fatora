@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -25,4 +26,7 @@ abstract class RegisterModule {
   FacebookAuth get facebookSignIn => FacebookAuth.i;
   @injectable
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
+
+  @injectable
+  FirebaseFunctions get cloudFunctions => FirebaseFunctions.instance;
 }

@@ -20,6 +20,8 @@ class BlocTextFieldInput<B extends StateStreamable<S>, S>
     required this.onChanged,
     this.keyboaedType,
   }) : super(key: key);
+
+
 //(previous, current) => previous.name != current.name
   @override
   Widget build(BuildContext context) {
@@ -85,8 +87,8 @@ class _PasswordTextFieldState extends State<_PasswordTextField> {
           onTap: toggelPassword,
           child: Icon(
             showPassword
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
           ),
         ),
       ),

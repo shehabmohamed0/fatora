@@ -79,7 +79,7 @@ class SignInCubit extends Cubit<SignInState> {
     final either = await _signInWithGoogle(params: NoArgsParams());
 
     either.fold((failure) {
-      if (failure is SignInWithCredential) {
+      if (failure is SignInWithCredentialFailure) {
         emit(
           state.copyWith(
               errorMessage: failure.message,
@@ -102,7 +102,7 @@ class SignInCubit extends Cubit<SignInState> {
     final either = await _signInWithFacebook(params: NoArgsParams());
 
     either.fold((failure) {
-      if (failure is SignInWithCredential) {
+      if (failure is SignInWithCredentialFailure) {
         emit(
           state.copyWith(
               errorMessage: failure.message,
@@ -120,6 +120,5 @@ class SignInCubit extends Cubit<SignInState> {
     });
   }
 
-  void signInWithPhone() {
-  }
+  
 }

@@ -1,6 +1,8 @@
 import 'dart:developer';
-import 'package:bloc/bloc.dart';
+
 import 'package:equatable/equatable.dart';
+import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
+import 'package:fatora/core/errors/failures/failures.dart';
 import 'package:fatora/core/params/auth/phone_sign_up_params.dart';
 import 'package:fatora/core/params/auth/verify_phone_params.dart';
 import 'package:fatora/features/auth/domain/usecases/phone_sign_up.dart';
@@ -37,29 +39,40 @@ class OTPCubit extends Cubit<OTPState> {
 
   Future<void> verifyPhoneNumber(
       String phoneNumber, BuildContext context) async {
-    await _verifyPhoneNumber.call(
+    final either = await _verifyPhoneNumber.call(
         params: VerifyPhoneParams(
       phoneNumber: '+2$phoneNumber',
       verificationCompleted: (PhoneAuthCredential authCredential) {
         emit(state.copyWith(
           otp: OTP.dirty(authCredential.smsCode),
-          authCredential: authCredential,
+          autoGetCode: true,
           status: FormzStatus.submissionSuccess,
         ));
       },
       verificationFailed: (authException) {
+        final failure =
+            SignInWithCredentialFailure.fromCode(authException.code);
         log(authException.code);
+        context.read<SignUpFormCubit>().submissionFailure(failure);
       },
       codeSent: (String verId, forceCodeResent) {
         emit(state.copyWith(verificationId: verId));
+        context.read<SignUpFormCubit>().resetSubmissition();
         context.read<SignUpFlowCubit>().nextStep();
       },
       codeAutoRetrievalTimeout: (String verId) {},
     ));
+
+    either.fold((failure) {
+      context.read<SignUpFormCubit>().submissionFailure(failure);
+
+      if (failure is ServerFailure) {}
+    }, (success) {});
   }
 
   Future<void> onCompleted(String smsCode, BuildContext context) async {
     if (state.autoVerified) return;
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
     final credential = PhoneAuthProvider.credential(
         verificationId: state.verificationId, smsCode: smsCode);
     final signUpSate = context.read<SignUpFormCubit>().state;
@@ -70,31 +83,49 @@ class OTPCubit extends Cubit<OTPState> {
             phoneCredential: credential));
 
     either.fold((failure) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      if (failure is SignInWithCredentialFailure) {
+        emit(state.copyWith(
+            errorMessage: failure.message,
+            status: FormzStatus.submissionFailure));
+      }
     }, (success) {
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
+
+      context.read<SignUpFlowCubit>().nextStep();
     });
-    state.copyWith(autoVerified: true);
+    emit(state.copyWith(autoVerified: true));
+  }
+
+  void reset() {
+    emit(const OTPState());
   }
 
   Future<void> submit(BuildContext context) async {
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
     final credential = PhoneAuthProvider.credential(
         verificationId: state.verificationId, smsCode: state.otp.value);
-    emit(
-      state.copyWith(
-          authCredential: credential, status: FormzStatus.submissionInProgress),
-    );
-
     final signUpSate = context.read<SignUpFormCubit>().state;
     final either = await _phoneSignUp(
         params: PhoneSignUpParams(
             name: signUpSate.name.value,
             phoneNumber: signUpSate.phoneNumber.value,
             phoneCredential: credential));
+
     either.fold((failure) {
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      if (failure is SignInWithCredentialFailure) {
+        emit(state.copyWith(
+            errorMessage: failure.message,
+            status: FormzStatus.submissionFailure));
+      }
     }, (success) {
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
+
+      context.read<SignUpFlowCubit>().nextStep();
     });
+  }
+
+  void autoFillPinput(TextEditingController textEditingController, String sms) {
+    textEditingController.text = sms;
+    emit(state.copyWith(otp: OTP.dirty(sms)));
   }
 }

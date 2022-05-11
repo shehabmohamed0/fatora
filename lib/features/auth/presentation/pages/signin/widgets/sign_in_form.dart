@@ -1,6 +1,7 @@
 import 'package:fatora/core/errors/exceptions/auth/google_sign_in_exceptions.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_in/sign_in_cubit.dart';
 import 'package:fatora/features/auth/presentation/pages/signup/sign_up_page.dart';
+import 'package:fatora/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -175,20 +176,19 @@ class _PhoneLoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ElevatedButton.icon(
-      key: const Key('loginForm_phoneLogin_raisedButton'),
-      label: const Text(
-        'SIGN IN WITH PHONE',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
+        key: const Key('loginForm_phoneLogin_raisedButton'),
+        label: const Text(
+          'SIGN IN WITH PHONE',
+          style: TextStyle(color: Colors.white),
         ),
-        primary: theme.colorScheme.secondary,
-      ),
-      icon: const Icon(FontAwesomeIcons.phone, color: Colors.white),
-      onPressed: context.read<SignInCubit>().signInWithPhone,
-    );
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          primary: theme.colorScheme.secondary,
+        ),
+        icon: const Icon(FontAwesomeIcons.phone, color: Colors.white),
+        onPressed: () => Navigator.pushNamed(context, Routes.verifiyPhone));
   }
 }
 
@@ -198,7 +198,7 @@ class _SignUpButton extends StatelessWidget {
     final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount_flatButton'),
-      onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
+      onPressed: () => Navigator.of(context).pushNamed( Routes.signup),
       child: Text(
         'CREATE ACCOUNT',
         style: TextStyle(color: theme.primaryColor),

@@ -36,6 +36,7 @@ dependencies:
   firebase_auth: ^3.3.16
   firebase_core: ^1.15.0
   cloud_firestore: ^3.1.13
+  cloud_functions: ^3.2.14
   flow_builder: ^0.0.6
   flutter:
     sdk: flutter

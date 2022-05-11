@@ -3,7 +3,7 @@ import 'package:formz/formz.dart';
 /// Validation errors for the [Phone Number] [FormzInput].
 enum PhoneValidationError {
   /// Generic invalid error.
-  invalid
+  invalid,
 }
 
 /// {@template phone}

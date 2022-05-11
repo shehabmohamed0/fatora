@@ -1,5 +1,7 @@
-class Routes{
-  static const startUpViewRoute = 'startUp';
-  static const addPostViewRoute = 'addPost';
-
+class Routes {
+  static const landingPage = '/';
+  static const startup = '/startup';
+  static const home = '/home';
+  static const signup = '/signup';
+  static const verifiyPhone = '/verifiyPhone';
 }

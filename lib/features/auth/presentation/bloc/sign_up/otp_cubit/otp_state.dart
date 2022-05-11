@@ -6,65 +6,47 @@ class OTPState extends Equatable {
     this.status = FormzStatus.pure,
     this.verificationId = '',
     this.autoVerified = false,
+    this.autoGetCode = false,
     this.smsCode = '',
+    this.errorMessage,
   });
 
   final OTP otp;
   final String smsCode;
   final String verificationId;
   final bool autoVerified;
+  final bool autoGetCode;
+  final String? errorMessage;
   final FormzStatus status;
 
   @override
-  List<Object?> get props => [otp, status];
+  List<Object?> get props => [
+        otp,
+        verificationId,
+        autoVerified,
+        autoGetCode,
+        smsCode,
+        errorMessage,
+        status
+      ];
 
   OTPState copyWith({
     OTP? otp,
     String? smsCode,
     String? verificationId,
     FormzStatus? status,
-    AuthCredential? authCredential,
     bool? autoVerified,
+    bool? autoGetCode,
+    String? errorMessage,
   }) {
     return OTPState(
       otp: otp ?? this.otp,
       verificationId: verificationId ?? this.verificationId,
       smsCode: smsCode ?? this.smsCode,
       autoVerified: autoVerified ?? this.autoVerified,
+      autoGetCode: autoGetCode ?? this.autoGetCode,
       status: status ?? this.status,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
-}
-
-abstract class OTPStateP extends Equatable {}
-
-class OTPSend extends OTPStateP {
-  final OTP otp;
-  final String smsCode;
-  final String verificationId;
-  OTPSend(
-      {this.otp = const OTP.pure(),
-      this.verificationId = '',
-      this.smsCode = ''});
-  OTPState copyWith({
-    OTP? otp,
-    String? smsCode,
-    String? verificationId,
-    FormzStatus? status,
-    AuthCredential? authCredential,
-  }) {
-    return OTPState(
-      otp: otp ?? this.otp,
-      verificationId: verificationId ?? this.verificationId,
-      smsCode: smsCode ?? this.smsCode,
-    );
-  }
-
-  @override
-  List<Object?> get props => [otp, smsCode, verificationId];
-}
-
-class OTPSuccess extends OTPStateP {
-  @override
-  List<Object?> get props => throw UnimplementedError();
 }

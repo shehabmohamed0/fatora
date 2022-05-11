@@ -4,8 +4,8 @@ import 'package:fatora/bloc_observer.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
 import 'package:fatora/locator/locator.dart';
 import 'package:fatora/router/router.dart';
+import 'package:fatora/router/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,13 +46,8 @@ class AppView extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: FlowBuilder<AppStatus>(
-        state: context.select((AppBloc bloc) => bloc.state.status),
-        onComplete: (d) {
-          log('triggered');
-        },
-        onGeneratePages: onGenerateAppViewPages,
-      ),
+      onGenerateRoute: AppRouter.generateRoute,
+      initialRoute: Routes.landingPage,
     );
   }
 }

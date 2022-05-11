@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
+import 'package:fatora/core/errors/failures/failures.dart';
 import 'package:fatora/core/form_inputs/confirmed_password.dart';
 import 'package:fatora/core/form_inputs/email.dart';
 import 'package:fatora/core/form_inputs/password.dart';
 import 'package:fatora/core/form_inputs/phone_number.dart';
 import 'package:fatora/core/params/auth/phone_sign_up_params.dart';
-import 'package:fatora/features/auth/domain/usecases/full_sign_up.dart';
 import 'package:fatora/features/auth/domain/usecases/phone_sign_up.dart';
-import 'package:fatora/features/auth/presentation/bloc/sign_up/flow_cubit/sign_up_flow_cubit.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,10 +20,10 @@ part 'sign_up_form_state.dart';
 
 @injectable
 class SignUpFormCubit extends Cubit<SignUpFormState> {
-  SignUpFormCubit(this._fullSignUp, this._phoneSignUp)
-      : super(const SignUpFormState());
+  SignUpFormCubit(
+    this._phoneSignUp,
+  ) : super(const SignUpFormState());
 
-  final FullSignUp _fullSignUp;
   final PhoneSignUp _phoneSignUp;
 
   void nameChanged(String value) {
@@ -80,41 +80,30 @@ class SignUpFormCubit extends Cubit<SignUpFormState> {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
 
-   await Future.delayed(const Duration(seconds: 2));
     await context
         .read<OTPCubit>()
         .verifyPhoneNumber(state.phoneNumber.value, context);
-
-    emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    //context.read<SignUpFlowCubit>().nextStep();
-
-    // final either = await _signUp(
-    //   params: SignUpParams(
-    //     email: state.email.value,
-    //     password: state.password.value,
-    //     name: state.name.value,
-    //     phoneNumber: state.phoneNumber.value,
-    //   ),
-    // );
-    // either.fold(
-    //   (failure) {
-    //     if (failure is SignUpWithEmailAndPasswordFailure) {
-    //       emit(
-    //         state.copyWith(
-    //             errorMessage: failure.message,
-    //             status: FormzStatus.submissionFailure),
-    //       );
-    //     } else {
-    //       emit(state.copyWith(status: FormzStatus.submissionFailure));
-    //     }
-    //   },
-    //   (success) {
-    //     emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    //   },
-    // );
   }
 
   void resetSubmissition() {
-    emit(state.copyWith(status: FormzStatus.valid));
+    emit(state.copyWith(status: _validateWithNew()));
+  }
+
+  void submissionFailure(Failure failure) {
+    if (failure is ServerFailure) {
+      emit(
+        state.copyWith(
+          status: FormzStatus.submissionFailure,
+          errorMessage: failure.message,
+        ),
+      );
+    } else if (failure is SignInWithCredentialFailure) {
+      emit(
+        state.copyWith(
+          status: FormzStatus.submissionFailure,
+          errorMessage: failure.message,
+        ),
+      );
+    }
   }
 }

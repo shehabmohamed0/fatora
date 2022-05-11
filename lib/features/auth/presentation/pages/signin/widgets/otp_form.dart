@@ -1,45 +1,35 @@
 import 'dart:developer';
 
-import 'package:fatora/features/auth/presentation/bloc/sign_up/flow_cubit/sign_up_flow_cubit.dart';
-import 'package:fatora/features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart';
+import 'package:fatora/features/auth/presentation/bloc/sign_in/phone/phone_sign_in_cubit.dart';
 import 'package:fatora/resources/constants_manager.dart';
 import 'package:fatora/resources/values_manager.dart';
+import 'package:fatora/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:pinput/pinput.dart';
 
-class OTPCheckWidget extends StatefulWidget {
-  const OTPCheckWidget({Key? key}) : super(key: key);
+class OTPForm extends StatefulWidget {
+  const OTPForm({Key? key}) : super(key: key);
 
   @override
-  State<OTPCheckWidget> createState() => _OTPCheckWidgetState();
+  State<OTPForm> createState() => _OTPFormState();
 }
 
-class _OTPCheckWidgetState extends State<OTPCheckWidget>
-    with AutomaticKeepAliveClientMixin {
-  final TextEditingController controller = TextEditingController();
+class _OTPFormState extends State<OTPForm> {
+  final controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
-    return BlocConsumer<OTPCubit, OTPState>(
+    final controller = TextEditingController();
+    return BlocConsumer<PhoneSignInCubit, PhoneSignInState>(
       listener: (context, state) {
-        if (state.status.isSubmissionSuccess) {
-          if (state.autoGetCode) {
-            setState(() {
-              controller.text = state.smsCode;
-            });
-          }
-        } else if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(state.errorMessage ?? 'Sign Up Failure')),
-            );
-        } else if (state.status.isPure) {
+        if (state.smsFormStatus.isSubmissionSuccess) {
+          Navigator.of(context).popUntil((route) => route.settings.name ==Routes.landingPage);
+        }
+        if (state.autoFilled) {
+          log('${state.autoFilled}');
           setState(() {
-            controller.text = '';
+            controller.text = state.otp.value;
           });
         }
       },
@@ -47,7 +37,7 @@ class _OTPCheckWidgetState extends State<OTPCheckWidget>
         return Scaffold(
           body: ListView(
             children: [
-              if (state.status.isSubmissionInProgress)
+              if (state.phoneFormStatus.isSubmissionInProgress)
                 const LinearProgressIndicator(),
               Padding(
                 padding: const EdgeInsets.all(AppPadding.p16),
@@ -66,9 +56,9 @@ class _OTPCheckWidgetState extends State<OTPCheckWidget>
                     Pinput(
                       length: 6,
                       controller: controller,
-                      onChanged: context.read<OTPCubit>().otpChanged,
+                      onChanged: context.read<PhoneSignInCubit>().otpChanged,
                       onCompleted: (smscode) {
-                        context.read<OTPCubit>().onCompleted(smscode, context);
+                        context.read<PhoneSignInCubit>().onCompleted(smscode);
                       },
                     ),
                     const SizedBox(height: 24),
@@ -122,21 +112,23 @@ class _OTPCheckWidgetState extends State<OTPCheckWidget>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
 
 class _NextButton extends StatelessWidget {
   const _NextButton();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OTPCubit, OTPState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+    return BlocBuilder<PhoneSignInCubit, PhoneSignInState>(
+      buildWhen: (previous, current) =>
+          previous.phoneFormStatus != current.phoneFormStatus,
       builder: (context, state) {
         return ElevatedButton(
-          onPressed: state.status.isValidated
-              ? () {
-                  context.read<OTPCubit>().submit(context);
-                }
+          onPressed: state.phoneFormStatus.isValidated
+              ? context.read<PhoneSignInCubit>().submitSMS
               : null,
           style: ElevatedButton.styleFrom(
               elevation: 0, shape: const RoundedRectangleBorder()),

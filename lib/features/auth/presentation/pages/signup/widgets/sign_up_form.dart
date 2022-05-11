@@ -1,5 +1,3 @@
-import 'package:fatora/features/auth/presentation/bloc/sign_up/flow_cubit/sign_up_flow_cubit.dart';
-import 'package:fatora/features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/sign_up_form/sign_up_form_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,24 +5,33 @@ import 'package:formz/formz.dart';
 
 import '../../../../../../widgets/bloc_text_field.dart';
 
-class SignUpForm extends StatelessWidget {
+class SignUpForm extends StatefulWidget {
   const SignUpForm({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<SignUpForm> createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocListener<SignUpFormCubit, SignUpFormState>(
-      listener: (context, state) async {
-        // if (state.status.isSubmissionSuccess) {
-        //   Navigator.of(context).pop();
-        // } else if (state.status.isSubmissionFailure) {
-        //   ScaffoldMessenger.of(context)
-        //     ..hideCurrentSnackBar()
-        //     ..showSnackBar(
-        //       SnackBar(content: Text(state.errorMessage ?? 'Sign Up Failure')),
-        //     );
-        // }
+      listener: (context, state) {
+        if (state.status.isSubmissionSuccess) {
+          // Navigator.of(context).pop();
+        } else if (state.status.isSubmissionFailure) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text(state.errorMessage ?? 'Sign Up Failure')),
+            );
+        }
       },
       child: Align(
         alignment: const Alignment(0, -1 / 3),

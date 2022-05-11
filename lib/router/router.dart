@@ -1,34 +1,44 @@
-import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
-import 'package:fatora/features/auth/presentation/pages/signin/sign_in_page.dart';
-import 'package:fatora/features/cart/presentation/pages/home_page.dart';
+import 'package:fatora/features/auth/presentation/pages/landing/landing_page.dart';
+import 'package:fatora/features/auth/presentation/pages/signin/verifiy_phone_page.dart';
+import 'package:fatora/features/auth/presentation/pages/signup/sign_up_page.dart';
+import 'package:fatora/router/routes.dart';
 import 'package:flutter/material.dart';
 
-List<Page> onGenerateAppViewPages(AppStatus state, List<Page<dynamic>> pages) {
-  switch (state) {
-    case AppStatus.authenticated:
-      return [HomePage.page()];
-    case AppStatus.unauthenticated:
-      return [SignInPage.page()];
+class AppRouter {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case Routes.landingPage:
+        return _getPageRoute(
+            routeName: settings.name, page: const LandingPage());
+      case Routes.signup:
+        return _getPageRoute(
+            routeName: settings.name, page: const SignUpPage());
+      case Routes.verifiyPhone:
+        return _getPageRoute(
+            routeName: settings.name, page: const VerifyPhonePage());
+
+      default:
+        return MaterialPageRoute(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: const Text('Route not foud'),
+            ),
+          ),
+        );
+    }
   }
 }
 
-// class AppRouter {
-//   static Route<dynamic> generateRoute(RouteSettings settings) {
-//     switch (settings.name) {
-//     }
-//   }
-// }
-
-// PageRoute _getPageRoute({
-//   required String? routeName,
-//   required Widget view,
-//   RouteSettings? routeSettings,
-// }) {
-//   return MaterialPageRoute(
-//     builder: (_) => view,
-//     settings: routeSettings ??
-//         RouteSettings(
-//           name: routeName,
-//         ),
-//   );
-// }
+PageRoute _getPageRoute({
+  required String? routeName,
+  required Widget page,
+  RouteSettings? routeSettings,
+}) {
+  return MaterialPageRoute(
+    builder: (_) => page,
+    settings: routeSettings ??
+        RouteSettings(
+          name: routeName,
+        ),
+  );
+}
