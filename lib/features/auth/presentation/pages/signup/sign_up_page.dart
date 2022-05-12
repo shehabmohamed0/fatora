@@ -1,3 +1,4 @@
+import 'package:fatora/core/resources/constants_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/complete_form/complete_form_cubit.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/flow_cubit/sign_up_flow_cubit.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart';
@@ -6,7 +7,6 @@ import 'package:fatora/features/auth/presentation/pages/signup/widgets/complete_
 import 'package:fatora/features/auth/presentation/pages/signup/widgets/otp_check.dart';
 import 'package:fatora/features/auth/presentation/pages/signup/widgets/sign_up_form.dart';
 import 'package:fatora/locator/locator.dart';
-import 'package:fatora/resources/constants_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

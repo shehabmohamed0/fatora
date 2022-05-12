@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:fatora/core/constants/firestore_path.dart';
 import 'package:fatora/core/errors/exceptions/auth/google_sign_in_exceptions.dart';
-import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
 import 'package:fatora/features/auth/data/models/user/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:fatora/core/extensions/to_user.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class AuthApiService {
   Future<void> phoneSignUp(
@@ -56,7 +56,6 @@ class AuthApiServiceImpl implements AuthApiService {
     required AuthCredential phoneCredential,
     required String phoneNumber,
   }) async {
-    firebaseAuth.signInWithPhoneNumber(phoneNumber);
     final userCredential =
         await firebaseAuth.signInWithCredential(phoneCredential);
     final userDoc = firestore.doc(FirestorePath.user(userCredential.user!.uid));
@@ -85,11 +84,15 @@ class AuthApiServiceImpl implements AuthApiService {
 
   @override
   Stream<UserModel> get user {
-    return firebaseAuth.userChanges().map((user) {
-      if (user == null) {
-        return UserModel.empty;
+    return firebaseAuth.userChanges().switchMap((user) {
+      if (user != null) {
+        return firestore
+            .doc(FirestorePath.user(user.uid))
+            .snapshots()
+            .map((doc) => UserModel.fromFireStore(doc));
+      } else {
+        return const Stream.empty();
       }
-      return user.toUserModel();
     });
   }
 

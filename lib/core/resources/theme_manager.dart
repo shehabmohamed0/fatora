@@ -1,8 +1,9 @@
-import 'package:fatora/resources/color_manager.dart';
-import 'package:fatora/resources/font_manager.dart';
-import 'package:fatora/resources/styles_manager.dart';
-import 'package:fatora/resources/values_manager.dart';
 import 'package:flutter/material.dart';
+
+import 'font_manager.dart';
+import 'styles_manager.dart';
+import 'values_manager.dart';
+import 'color_manager.dart';
 
 ThemeData getApplicationTheme() {
   return ThemeData(
@@ -42,8 +43,7 @@ ThemeData getApplicationTheme() {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSize.s12)))),
 
-
-    textTheme: TextTheme( 
+    textTheme: TextTheme(
         displayLarge: getSemiBoldStyle(
             color: ColorManager.darkGrey, fontSize: FontSize.s20),
         headlineLarge: getSemiBoldStyle(

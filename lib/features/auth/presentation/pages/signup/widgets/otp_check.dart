@@ -1,9 +1,6 @@
-import 'dart:developer';
-
-import 'package:fatora/features/auth/presentation/bloc/sign_up/flow_cubit/sign_up_flow_cubit.dart';
+import 'package:fatora/core/resources/constants_manager.dart';
+import 'package:fatora/core/resources/values_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart';
-import 'package:fatora/resources/constants_manager.dart';
-import 'package:fatora/resources/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -28,7 +25,7 @@ class _OTPCheckWidgetState extends State<OTPCheckWidget>
         if (state.status.isSubmissionSuccess) {
           if (state.autoGetCode) {
             setState(() {
-              controller.text = state.smsCode;
+              controller.text = state.otp.value;
             });
           }
         } else if (state.status.isSubmissionFailure) {

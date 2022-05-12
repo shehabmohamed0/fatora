@@ -20,11 +20,7 @@ part 'sign_up_form_state.dart';
 
 @injectable
 class SignUpFormCubit extends Cubit<SignUpFormState> {
-  SignUpFormCubit(
-    this._phoneSignUp,
-  ) : super(const SignUpFormState());
-
-  final PhoneSignUp _phoneSignUp;
+  SignUpFormCubit() : super(const SignUpFormState());
 
   void nameChanged(String value) {
     final name = Name.dirty(value);
@@ -52,28 +48,6 @@ class SignUpFormCubit extends Cubit<SignUpFormState> {
   }) {
     return Formz.validate(
         [name ?? state.name, phoneNumber ?? state.phoneNumber]);
-  }
-
-  Future<void> phoneVerified(AuthCredential authCredential) async {
-    final either = await _phoneSignUp(
-      params: PhoneSignUpParams(
-        name: state.name.value,
-        phoneNumber: state.phoneNumber.value,
-        phoneCredential: authCredential,
-      ),
-    );
-
-    either.fold((failure) {}, (success) {
-      emit(state.copyWith(status: FormzStatus.submissionSuccess));
-    });
-  }
-
-  Future<void> signUpWithPhone() async {
-    await _phoneSignUp(
-        params: PhoneSignUpParams(
-            name: state.name.value,
-            phoneNumber: state.phoneNumber.value,
-            phoneCredential: state.phoneAuth!));
   }
 
   Future<void> signUpFormSubmitted(BuildContext context) async {

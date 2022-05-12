@@ -1,5 +1,5 @@
+import 'package:fatora/core/resources/values_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/complete_form/complete_form_cubit.dart';
-import 'package:fatora/resources/values_manager.dart';
 import 'package:fatora/widgets/bloc_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,5 +1,6 @@
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
-import 'package:fatora/features/cart/presentation/pages/widgets/avatar.dart';
+import 'package:fatora/router/routes.dart';
+import 'package:fatora/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,17 @@ class HomePage extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: AppBar(
+        leading: FittedBox(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Avatar(
+              photo: user.photoURL,
+              onTap: () {
+                Navigator.pushNamed(context, Routes.settings);
+              },
+            ),
+          ),
+        ),
         title: const Text('Home'),
         actions: <Widget>[
           IconButton(

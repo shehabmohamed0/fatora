@@ -10,7 +10,7 @@ class UserModel extends User {
     required String name,
     String? email,
     String? photoURL,
-    String? phoneNumber,
+    required String phoneNumber,
   }) : super(
             id: id,
             name: name,
@@ -21,10 +21,11 @@ class UserModel extends User {
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
   static const empty = UserModel(id: '', name: '', phoneNumber: '');
-
+  UserModel copyWithId(String id) =>
+      UserModel(id: id, name: name, phoneNumber: phoneNumber);
   factory UserModel.fromFireStore(
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
     return _$UserModelFromJson(documentSnapshot.data()!)
-        .copyWith(id: documentSnapshot.id) as UserModel;
+        .copyWithId(documentSnapshot.id);
   }
 }

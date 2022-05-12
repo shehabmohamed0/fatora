@@ -1,10 +1,9 @@
-import 'dart:developer';
 
+import 'package:fatora/core/resources/constants_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_in/phone/phone_sign_in_cubit.dart';
 import 'package:fatora/features/auth/presentation/pages/signin/widgets/otp_form.dart';
 import 'package:fatora/features/auth/presentation/pages/signin/widgets/phone_form.dart';
 import 'package:fatora/locator/locator.dart';
-import 'package:fatora/resources/constants_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

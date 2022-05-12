@@ -43,6 +43,8 @@ class OTPCubit extends Cubit<OTPState> {
         params: VerifyPhoneParams(
       phoneNumber: '+2$phoneNumber',
       verificationCompleted: (PhoneAuthCredential authCredential) {
+        log('auto verified');
+
         emit(state.copyWith(
           otp: OTP.dirty(authCredential.smsCode),
           autoGetCode: true,
@@ -65,8 +67,6 @@ class OTPCubit extends Cubit<OTPState> {
 
     either.fold((failure) {
       context.read<SignUpFormCubit>().submissionFailure(failure);
-
-      if (failure is ServerFailure) {}
     }, (success) {});
   }
 

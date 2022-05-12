@@ -5,14 +5,14 @@ class User extends Equatable {
   final String name;
   final String? email;
   final String? photoURL;
-  final String? phoneNumber;
+  final String phoneNumber;
 
   const User(
       {required this.id,
       required this.name,
       required this.email,
       this.photoURL,
-      this.phoneNumber});
+      required this.phoneNumber});
 
   User copyWith({
     String? id,

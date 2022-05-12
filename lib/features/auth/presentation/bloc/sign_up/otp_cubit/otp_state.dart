@@ -7,12 +7,10 @@ class OTPState extends Equatable {
     this.verificationId = '',
     this.autoVerified = false,
     this.autoGetCode = false,
-    this.smsCode = '',
     this.errorMessage,
   });
 
   final OTP otp;
-  final String smsCode;
   final String verificationId;
   final bool autoVerified;
   final bool autoGetCode;
@@ -25,7 +23,6 @@ class OTPState extends Equatable {
         verificationId,
         autoVerified,
         autoGetCode,
-        smsCode,
         errorMessage,
         status
       ];
@@ -42,7 +39,6 @@ class OTPState extends Equatable {
     return OTPState(
       otp: otp ?? this.otp,
       verificationId: verificationId ?? this.verificationId,
-      smsCode: smsCode ?? this.smsCode,
       autoVerified: autoVerified ?? this.autoVerified,
       autoGetCode: autoGetCode ?? this.autoGetCode,
       status: status ?? this.status,

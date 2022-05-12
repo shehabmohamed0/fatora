@@ -1,6 +1,8 @@
 import 'package:fatora/features/auth/presentation/pages/landing/landing_page.dart';
 import 'package:fatora/features/auth/presentation/pages/signin/verifiy_phone_page.dart';
 import 'package:fatora/features/auth/presentation/pages/signup/sign_up_page.dart';
+import 'package:fatora/features/settings/presentation/pages/account_info_page.dart';
+import 'package:fatora/features/settings/presentation/pages/settings_page.dart';
 import 'package:fatora/router/routes.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +18,12 @@ class AppRouter {
       case Routes.verifiyPhone:
         return _getPageRoute(
             routeName: settings.name, page: const VerifyPhonePage());
+      case Routes.settings:
+        return _getPageRoute(
+            routeName: settings.name, page: const SettingsPage());
+      case Routes.accountInfo:
+        return _getPageRoute(
+            routeName: settings.name, page: const AccountInfoPage());
 
       default:
         return MaterialPageRoute(

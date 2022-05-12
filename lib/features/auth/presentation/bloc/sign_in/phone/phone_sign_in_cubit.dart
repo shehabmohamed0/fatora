@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
+import 'package:fatora/core/errors/failures/failures.dart';
 import 'package:fatora/core/form_inputs/otp.dart';
 import 'package:fatora/core/form_inputs/phone_number.dart';
 import 'package:fatora/core/params/auth/phone_sign_in_params.dart';
@@ -30,7 +31,7 @@ class PhoneSignInCubit extends Cubit<PhoneSignInState> {
   }
 
   Future<void> _verifiyPhone() async {
-    await _verifyPhoneNumber(
+    final either = await _verifyPhoneNumber(
         params: VerifyPhoneParams(
       phoneNumber: '+2${state.phoneNumber.value}',
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -40,9 +41,9 @@ class PhoneSignInCubit extends Cubit<PhoneSignInState> {
             autoFilled: true,
           ),
         );
-        //  await signIn(credential);
       },
       codeSent: (String verId, forceCodeResent) {
+        log('Code sent');
         emit(
           state.copyWith(
             verificationID: verId,
@@ -52,6 +53,7 @@ class PhoneSignInCubit extends Cubit<PhoneSignInState> {
         );
       },
       verificationFailed: (authException) {
+        log(authException.code);
         final failure =
             SignInWithCredentialFailure.fromCode(authException.code);
         emit(
@@ -63,6 +65,17 @@ class PhoneSignInCubit extends Cubit<PhoneSignInState> {
       },
       codeAutoRetrievalTimeout: (String verId) {},
     ));
+
+    either.fold((failure) {
+      if (failure is ServerFailure) {
+        emit(
+          state.copyWith(
+            errorMessage: failure.message,
+            phoneFormStatus: FormzStatus.submissionFailure,
+          ),
+        );
+      }
+    }, (success) {});
   }
 
   Future<void> signIn(PhoneAuthCredential phoneAuthCredential) async {

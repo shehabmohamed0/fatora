@@ -1,6 +1,7 @@
-import 'dart:developer';
+import 'dart:ui';
 
 import 'package:fatora/bloc_observer.dart';
+import 'package:fatora/core/resources/font_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
 import 'package:fatora/locator/locator.dart';
 import 'package:fatora/router/router.dart';
@@ -45,7 +46,10 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+      ),
       onGenerateRoute: AppRouter.generateRoute,
       initialRoute: Routes.landingPage,
     );
