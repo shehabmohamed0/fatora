@@ -1,6 +1,4 @@
-import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
 import 'package:fatora/router/routes.dart';
-import 'package:fatora/widgets/avatar.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -33,9 +31,15 @@ class SettingsPage extends StatelessWidget {
             },
           ),
           SettingsListTile(
-            title: 'Login methods',
+            title: 'Email info',
             onTap: () {
-              Navigator.of(context).pushNamed(Routes.accountInfo);
+              Navigator.of(context).pushNamed(Routes.emailInfo);
+            },
+          ),
+          SettingsListTile(
+            title: 'Phone info',
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.phoneInfo);
             },
           ),
         ],

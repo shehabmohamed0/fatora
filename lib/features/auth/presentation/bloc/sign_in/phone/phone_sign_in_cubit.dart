@@ -33,7 +33,7 @@ class PhoneSignInCubit extends Cubit<PhoneSignInState> {
   Future<void> _verifiyPhone() async {
     final either = await _verifyPhoneNumber(
         params: VerifyPhoneParams(
-      phoneNumber: '+2${state.phoneNumber.value}',
+      phoneNumber: state.phoneNumber.value,
       verificationCompleted: (PhoneAuthCredential credential) async {
         emit(
           state.copyWith(

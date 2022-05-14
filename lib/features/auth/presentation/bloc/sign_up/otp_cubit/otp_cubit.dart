@@ -41,7 +41,7 @@ class OTPCubit extends Cubit<OTPState> {
       String phoneNumber, BuildContext context) async {
     final either = await _verifyPhoneNumber.call(
         params: VerifyPhoneParams(
-      phoneNumber: '+2$phoneNumber',
+      phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential authCredential) {
         log('auto verified');
 

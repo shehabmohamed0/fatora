@@ -1,5 +1,7 @@
-import 'package:fatora/features/auth/domain/entities/user.dart';
+import 'package:dartz/dartz.dart';
+import 'package:fatora/core/errors/failures/failures.dart';
+import 'package:fatora/core/params/settings/update_profile_params.dart';
 
 abstract class ProfileRepository {
-  Future<User> getUserProfile();
+  Future<Either<Failure, void>> updateProfile(UpdateProfileParams params);
 }

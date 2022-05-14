@@ -6,13 +6,17 @@ class User extends Equatable {
   final String? email;
   final String? photoURL;
   final String phoneNumber;
+  final DateTime? birthDate;
+  final String? gender;
 
   const User(
       {required this.id,
       required this.name,
-      required this.email,
+      required this.phoneNumber,
+      this.email,
       this.photoURL,
-      required this.phoneNumber});
+      this.birthDate,
+      this.gender});
 
   User copyWith({
     String? id,
@@ -20,17 +24,20 @@ class User extends Equatable {
     String? email,
     String? photoURL,
     String? phoneNumber,
+    DateTime? birthDate,
+    String? gender,
   }) {
     return User(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      photoURL: photoURL ?? this.photoURL,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        photoURL: photoURL ?? this.photoURL,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        birthDate: birthDate ?? this.birthDate,
+        gender: gender ?? this.gender);
   }
 
-  static const empty = User(id: '', email: '', name: '', phoneNumber: '');
+  static const empty = User(id: '', name: '', phoneNumber: '');
 
   /// Convenience getter to determine whether the current user is empty.
   bool get isEmpty => id.isEmpty;
@@ -39,5 +46,6 @@ class User extends Equatable {
   bool get isNotEmpty => id.isNotEmpty;
 
   @override
-  List<Object?> get props => [id, name, email, photoURL];
+  List<Object?> get props =>
+      [id, name, email, photoURL, phoneNumber, birthDate, gender];
 }

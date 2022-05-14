@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:fatora/core/constants/firestore_path.dart';
@@ -59,7 +61,7 @@ class AuthApiServiceImpl implements AuthApiService {
     final userCredential =
         await firebaseAuth.signInWithCredential(phoneCredential);
     final userDoc = firestore.doc(FirestorePath.user(userCredential.user!.uid));
-    await userDoc.set({'name': name, 'phoneNumber': '+2$phoneNumber'});
+    await userDoc.set({'name': name, 'phoneNumber': phoneNumber});
   }
 
   @override
@@ -84,14 +86,14 @@ class AuthApiServiceImpl implements AuthApiService {
 
   @override
   Stream<UserModel> get user {
-    return firebaseAuth.userChanges().switchMap((user) {
+    return firebaseAuth.userChanges().switchMap((user) async* {
       if (user != null) {
-        return firestore
+        yield* firestore
             .doc(FirestorePath.user(user.uid))
             .snapshots()
             .map((doc) => UserModel.fromFireStore(doc));
       } else {
-        return const Stream.empty();
+        yield UserModel.empty;
       }
     });
   }

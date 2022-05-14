@@ -39,7 +39,8 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await authApiService.signOut();
       return const Right(null);
-    } on Exception {
+    } on Exception catch (e) {
+      log(e.toString());
       return Left(CacheFailure());
     }
   }
@@ -83,6 +84,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(GoogleSignInWithGoogleCanceledFailure());
     } catch (_) {
       log(_.toString());
+
       return const Left(SignInWithCredentialFailure());
     }
   }

@@ -17,17 +17,28 @@ class PhoneNumber extends FormzInput<String, PhoneValidationError> {
   const PhoneNumber.dirty([String value = '']) : super.dirty(value);
 
   static final RegExp _phoneRegExp = RegExp(
-    r"^[0-9]+$",
+    r"^[+][0-9]+$",
   );
   @override
   PhoneValidationError? validator(String? value) {
     value ??= '';
 
-    if (_phoneRegExp.hasMatch(value) &&
-        value.startsWith('01') &&
-        value.length == 11) {
-      return null;
+    if (_phoneRegExp.hasMatch(value)) {
+      if (value.startsWith('+201') && value.length == 13) {
+        return null;
+      }
     }
     return PhoneValidationError.invalid;
+  }
+}
+
+extension ValidationError on PhoneNumber {
+  String? validationMessage() {
+    if (invalid) {
+      if (error == PhoneValidationError.invalid) {
+        return 'Invalid phone number.';
+      }
+    }
+    return null;
   }
 }

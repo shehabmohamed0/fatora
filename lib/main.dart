@@ -1,7 +1,5 @@
-import 'dart:ui';
 
 import 'package:fatora/bloc_observer.dart';
-import 'package:fatora/core/resources/font_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
 import 'package:fatora/locator/locator.dart';
 import 'package:fatora/router/router.dart';
@@ -9,6 +7,7 @@ import 'package:fatora/router/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() {
   return BlocOverrides.runZoned(
@@ -52,6 +51,7 @@ class AppView extends StatelessWidget {
       ),
       onGenerateRoute: AppRouter.generateRoute,
       initialRoute: Routes.landingPage,
+      builder: EasyLoading.init(),
     );
   }
 }
