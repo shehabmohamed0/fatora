@@ -10,4 +10,6 @@ class Routes {
   static const emailInfo = '/emailInfo';
   static const phoneInfo = '/phoneInfo';
   static const changePhone = '/changePhone';
+  static const otp = '/otp';
+  static const addEmail = '/addEmail';
 }

@@ -43,7 +43,6 @@ class PhoneSignInCubit extends Cubit<PhoneSignInState> {
         );
       },
       codeSent: (String verId, forceCodeResent) {
-        log('Code sent');
         emit(
           state.copyWith(
             verificationID: verId,

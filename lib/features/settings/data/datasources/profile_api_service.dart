@@ -6,6 +6,9 @@ import 'package:injectable/injectable.dart';
 abstract class ProfileApiService {
   Future<void> updateProfile(
       {String? name, DateTime? birthDate, String? gender});
+
+  Future<void> updatePhoneNumber(
+      String phoneNumber, PhoneAuthCredential phoneCredential);
 }
 
 @LazySingleton(as: ProfileApiService)
@@ -27,6 +30,17 @@ class ProfileApiServiceImpl implements ProfileApiService {
               ? null
               : gender
           : null,
+    });
+  }
+
+  @override
+  Future<void> updatePhoneNumber(
+      String phoneNumber, PhoneAuthCredential phoneCredential) async {
+    final user = firebaseAuth.currentUser!;
+    await user.updatePhoneNumber(phoneCredential);
+    final userDoc = firestore.doc(FirestorePath.user(user.uid));
+    userDoc.update({
+      'phoneNumber': phoneNumber,
     });
   }
 }

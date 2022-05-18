@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 @module
 abstract class RegisterModule {
@@ -29,4 +30,7 @@ abstract class RegisterModule {
 
   @injectable
   FirebaseFunctions get cloudFunctions => FirebaseFunctions.instance;
+
+  @injectable
+  SmsAutoFill get smsAutoFill => SmsAutoFill();
 }

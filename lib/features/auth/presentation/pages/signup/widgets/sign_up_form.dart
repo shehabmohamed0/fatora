@@ -1,4 +1,6 @@
+import 'package:fatora/core/form_inputs/phone_number.dart';
 import 'package:fatora/features/auth/presentation/bloc/sign_up/sign_up_form/sign_up_form_cubit.dart';
+import 'package:fatora/widgets/international_phone_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -16,6 +18,14 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm>
     with AutomaticKeepAliveClientMixin {
+  final textController = TextEditingController();
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
+
   @override
   bool get wantKeepAlive => true;
   @override
@@ -43,20 +53,24 @@ class _SignUpFormState extends State<SignUpForm>
               children: [
                 const _FirstNameTextField(),
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text(
-                      '🇪🇬 ',
-                      style: TextStyle(fontSize: 28),
-                    ),
-                    Flexible(child: _PhoneNumberTextField()),
-                  ],
+
+                BlocBuilder<SignUpFormCubit, SignUpFormState>(
+                  builder: (context, state) {
+                    return InternationalPhoneTextField(
+                      controller: textController,
+                      countries: const ['EG'],
+                      errorText: () {
+                        return state.phoneNumber.validationMessage();
+                      },
+                      onInputChanged: (phoneNumber) {
+                        context
+                            .read<SignUpFormCubit>()
+                            .phoneChanged(phoneNumber.phoneNumber!);
+                      },
+                    );
+                  },
                 ),
-                const SizedBox(height: 8),
-                // const _EmailTextField(),
-                // const SizedBox(height: 8),
-                // const _PasswordTextField(),
+             
                 const SizedBox(height: 8),
                 const _SignUpButton(),
               ],
@@ -64,25 +78,6 @@ class _SignUpFormState extends State<SignUpForm>
           ),
         ),
       ),
-    );
-  }
-}
-
-class _PhoneNumberTextField extends StatelessWidget {
-  const _PhoneNumberTextField({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocTextFieldInput<SignUpFormCubit, SignUpFormState>(
-      labelText: 'Phone number',
-      helperText: '',
-      errorText: (state) =>
-          state.phoneNumber.invalid ? 'invalid phone number' : null,
-      buildWhen: (previous, current) =>
-          previous.phoneNumber != current.phoneNumber,
-      onChanged: (bloc, phone) => bloc.phoneChanged(phone),
     );
   }
 }

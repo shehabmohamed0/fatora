@@ -13,47 +13,58 @@ import 'package:google_sign_in/google_sign_in.dart' as _i9;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:internet_connection_checker/internet_connection_checker.dart'
     as _i10;
-import 'package:shared_preferences/shared_preferences.dart' as _i15;
+import 'package:shared_preferences/shared_preferences.dart' as _i16;
+import 'package:sms_autofill/sms_autofill.dart' as _i19;
 
-import '../core/services/cache/cache_client.dart' as _i3;
-import '../core/services/network/network_info.dart' as _i11;
+import '../core/services/cache/cache_client.dart' as _i4;
+import '../core/services/network/network_info.dart' as _i12;
 import '../features/auth/data/datasources/local/auth_local_service.dart'
-    as _i21;
-import '../features/auth/data/datasources/remote/auth_api_service.dart' as _i20;
-import '../features/auth/data/repositories/auth_repository_impl.dart' as _i23;
-import '../features/auth/domain/repositories/auth_repository.dart' as _i22;
-import '../features/auth/domain/usecases/link_email_and_password.dart' as _i24;
-import '../features/auth/domain/usecases/log_out.dart' as _i27;
-import '../features/auth/domain/usecases/phone_sign_up.dart' as _i25;
+    as _i24;
+import '../features/auth/data/datasources/remote/auth_api_service.dart' as _i23;
+import '../features/auth/data/repositories/auth_repository_impl.dart' as _i26;
+import '../features/auth/domain/repositories/auth_repository.dart' as _i25;
+import '../features/auth/domain/usecases/link_email_and_password.dart' as _i27;
+import '../features/auth/domain/usecases/log_out.dart' as _i30;
+import '../features/auth/domain/usecases/phone_sign_up.dart' as _i28;
 import '../features/auth/domain/usecases/sign_in_with_email_and_password.dart'
-    as _i26;
-import '../features/auth/domain/usecases/sign_in_with_facebook.dart' as _i28;
-import '../features/auth/domain/usecases/sign_in_with_google.dart' as _i29;
-import '../features/auth/domain/usecases/sign_in_with_phone.dart' as _i30;
-import '../features/auth/domain/usecases/verify_phone_number.dart' as _i31;
-import '../features/auth/presentation/bloc/app_status/app_bloc.dart' as _i32;
+    as _i29;
+import '../features/auth/domain/usecases/sign_in_with_facebook.dart' as _i31;
+import '../features/auth/domain/usecases/sign_in_with_google.dart' as _i32;
+import '../features/auth/domain/usecases/sign_in_with_phone.dart' as _i33;
+import '../features/auth/domain/usecases/verify_phone_number.dart' as _i35;
+import '../features/auth/presentation/bloc/app_status/app_bloc.dart' as _i36;
+import '../features/auth/presentation/bloc/sign_in/email_form/email_form_cubit.dart'
+    as _i39;
+import '../features/auth/presentation/bloc/sign_in/login_form_selection/login_form_selection_cubit.dart'
+    as _i11;
 import '../features/auth/presentation/bloc/sign_in/phone/phone_sign_in_cubit.dart'
-    as _i35;
-import '../features/auth/presentation/bloc/sign_in/sign_in_cubit.dart' as _i36;
+    as _i42;
+import '../features/auth/presentation/bloc/sign_in/phone_form/phone_form_cubit.dart'
+    as _i41;
 import '../features/auth/presentation/bloc/sign_up/complete_form/complete_form_cubit.dart'
-    as _i33;
+    as _i38;
 import '../features/auth/presentation/bloc/sign_up/flow_cubit/sign_up_flow_cubit.dart'
-    as _i16;
-import '../features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart'
-    as _i34;
-import '../features/auth/presentation/bloc/sign_up/sign_up_form/sign_up_form_cubit.dart'
     as _i17;
-import '../features/settings/data/datasources/profile_api_service.dart' as _i12;
+import '../features/auth/presentation/bloc/sign_up/otp_cubit/otp_cubit.dart'
+    as _i40;
+import '../features/auth/presentation/bloc/sign_up/sign_up_form/sign_up_form_cubit.dart'
+    as _i18;
+import '../features/auth/presentation/bloc/verifiy_phone/verifiy_phone_cubit.dart'
+    as _i34;
+import '../features/settings/data/datasources/profile_api_service.dart' as _i13;
 import '../features/settings/data/repositories/profile_repository_impl.dart'
-    as _i14;
+    as _i15;
 import '../features/settings/domain/repositories/profile_repository.dart'
-    as _i13;
-import '../features/settings/domain/usecases/update_profile.dart' as _i18;
+    as _i14;
+import '../features/settings/domain/usecases/update_phone_number.dart' as _i20;
+import '../features/settings/domain/usecases/update_profile.dart' as _i21;
 import '../features/settings/presentation/bloc/account_info/account_info_cubit.dart'
-    as _i19;
+    as _i22;
+import '../features/settings/presentation/bloc/add_email/add_email_cubit.dart'
+    as _i3;
 import '../features/settings/presentation/bloc/change_phone/change_phone_cubit.dart'
-    as _i4;
-import 'register_module.dart' as _i37; // ignore_for_file: unnecessary_lambdas
+    as _i37;
+import 'register_module.dart' as _i43; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
@@ -61,8 +72,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
     {String? environment, _i2.EnvironmentFilter? environmentFilter}) async {
   final gh = _i2.GetItHelper(get, environment, environmentFilter);
   final registerModule = _$RegisterModule();
-  gh.lazySingleton<_i3.CacheClient>(() => _i3.CacheClient());
-  gh.factory<_i4.ChangePhoneCubit>(() => _i4.ChangePhoneCubit());
+  gh.factory<_i3.AddEmailCubit>(() => _i3.AddEmailCubit());
+  gh.lazySingleton<_i4.CacheClient>(() => _i4.CacheClient());
   gh.factory<_i5.FacebookAuth>(() => registerModule.facebookSignIn);
   gh.factory<_i6.FirebaseAuth>(() => registerModule.auth);
   gh.factory<_i7.FirebaseFirestore>(() => registerModule.firestore);
@@ -70,62 +81,75 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
   gh.factory<_i9.GoogleSignIn>(() => registerModule.googleSignIn);
   gh.factory<_i10.InternetConnectionChecker>(
       () => registerModule.internetConnectionChecker);
-  gh.lazySingleton<_i11.NetworkInfo>(
-      () => _i11.NetworkInfoImpl(get<_i10.InternetConnectionChecker>()));
-  gh.lazySingleton<_i12.ProfileApiService>(() => _i12.ProfileApiServiceImpl(
+  gh.factory<_i11.LoginFormSelectionCubit>(
+      () => _i11.LoginFormSelectionCubit());
+  gh.lazySingleton<_i12.NetworkInfo>(
+      () => _i12.NetworkInfoImpl(get<_i10.InternetConnectionChecker>()));
+  gh.lazySingleton<_i13.ProfileApiService>(() => _i13.ProfileApiServiceImpl(
       get<_i6.FirebaseAuth>(), get<_i7.FirebaseFirestore>()));
-  gh.lazySingleton<_i13.ProfileRepository>(() => _i14.ProfileRepositoryImpl(
-      get<_i12.ProfileApiService>(), get<_i11.NetworkInfo>()));
-  await gh.factoryAsync<_i15.SharedPreferences>(() => registerModule.prefs,
+  gh.lazySingleton<_i14.ProfileRepository>(() => _i15.ProfileRepositoryImpl(
+      get<_i13.ProfileApiService>(), get<_i12.NetworkInfo>()));
+  await gh.factoryAsync<_i16.SharedPreferences>(() => registerModule.prefs,
       preResolve: true);
-  gh.factory<_i16.SignUpFlowCubit>(() => _i16.SignUpFlowCubit());
-  gh.factory<_i17.SignUpFormCubit>(() => _i17.SignUpFormCubit());
-  gh.lazySingleton<_i18.UpdateProfile>(
-      () => _i18.UpdateProfile(get<_i13.ProfileRepository>()));
-  gh.factory<_i19.AccountInfoCubit>(
-      () => _i19.AccountInfoCubit(get<_i18.UpdateProfile>()));
-  gh.lazySingleton<_i20.AuthApiService>(() => _i20.AuthApiServiceImpl(
+  gh.factory<_i17.SignUpFlowCubit>(() => _i17.SignUpFlowCubit());
+  gh.factory<_i18.SignUpFormCubit>(() => _i18.SignUpFormCubit());
+  gh.factory<_i19.SmsAutoFill>(() => registerModule.smsAutoFill);
+  gh.lazySingleton<_i20.UpdatePhoneNumber>(
+      () => _i20.UpdatePhoneNumber(get<_i14.ProfileRepository>()));
+  gh.lazySingleton<_i21.UpdateProfile>(
+      () => _i21.UpdateProfile(get<_i14.ProfileRepository>()));
+  gh.factory<_i22.AccountInfoCubit>(
+      () => _i22.AccountInfoCubit(get<_i21.UpdateProfile>()));
+  gh.lazySingleton<_i23.AuthApiService>(() => _i23.AuthApiServiceImpl(
       firebaseAuth: get<_i6.FirebaseAuth>(),
       googleSignIn: get<_i9.GoogleSignIn>(),
       facebookAuth: get<_i5.FacebookAuth>(),
       firestore: get<_i7.FirebaseFirestore>(),
       cloudFunctions: get<_i8.FirebaseFunctions>()));
-  gh.lazySingleton<_i21.AuthLocalService>(
-      () => _i21.AuthLocalServiceImpl(get<_i3.CacheClient>()));
-  gh.lazySingleton<_i22.AuthRepository>(() => _i23.AuthRepositoryImpl(
-      authApiService: get<_i20.AuthApiService>(),
-      authLocalService: get<_i21.AuthLocalService>(),
-      networkInfo: get<_i11.NetworkInfo>()));
-  gh.lazySingleton<_i24.LinkEmailAndPassword>(
-      () => _i24.LinkEmailAndPassword(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i25.PhoneSignUp>(
-      () => _i25.PhoneSignUp(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i26.SignInWithEmailAndPassword>(
-      () => _i26.SignInWithEmailAndPassword(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i27.SignInWithEmailAndPassword>(
-      () => _i27.SignInWithEmailAndPassword(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i28.SignInWithFacebook>(
-      () => _i28.SignInWithFacebook(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i29.SignInWithGoogle>(
-      () => _i29.SignInWithGoogle(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i30.SignInWithPhone>(
-      () => _i30.SignInWithPhone(get<_i22.AuthRepository>()));
-  gh.lazySingleton<_i31.VerifyPhoneNumber>(
-      () => _i31.VerifyPhoneNumber(get<_i22.AuthRepository>()));
-  gh.factory<_i32.AppBloc>(
-      () => _i32.AppBloc(authRepository: get<_i22.AuthRepository>()));
-  gh.factory<_i33.CompleteFormCubit>(
-      () => _i33.CompleteFormCubit(get<_i24.LinkEmailAndPassword>()));
-  gh.factory<_i34.OTPCubit>(() => _i34.OTPCubit(
-      verifyPhoneNumber: get<_i31.VerifyPhoneNumber>(),
-      phoneSignUp: get<_i25.PhoneSignUp>()));
-  gh.factory<_i35.PhoneSignInCubit>(() => _i35.PhoneSignInCubit(
-      get<_i31.VerifyPhoneNumber>(), get<_i30.SignInWithPhone>()));
-  gh.factory<_i36.SignInCubit>(() => _i36.SignInCubit(
-      signInWithEmailAndPassword: get<_i26.SignInWithEmailAndPassword>(),
-      signInWithGoogle: get<_i29.SignInWithGoogle>(),
-      signInWithFacebook: get<_i28.SignInWithFacebook>()));
+  gh.lazySingleton<_i24.AuthLocalService>(
+      () => _i24.AuthLocalServiceImpl(get<_i4.CacheClient>()));
+  gh.lazySingleton<_i25.AuthRepository>(() => _i26.AuthRepositoryImpl(
+      authApiService: get<_i23.AuthApiService>(),
+      authLocalService: get<_i24.AuthLocalService>(),
+      networkInfo: get<_i12.NetworkInfo>()));
+  gh.lazySingleton<_i27.LinkEmailAndPassword>(
+      () => _i27.LinkEmailAndPassword(get<_i25.AuthRepository>()));
+  gh.lazySingleton<_i28.PhoneSignUp>(
+      () => _i28.PhoneSignUp(get<_i25.AuthRepository>()));
+  gh.lazySingleton<_i29.SignInWithEmailAndPassword>(
+      () => _i29.SignInWithEmailAndPassword(get<_i25.AuthRepository>()));
+  gh.lazySingleton<_i30.SignInWithEmailAndPassword>(
+      () => _i30.SignInWithEmailAndPassword(get<_i25.AuthRepository>()));
+  gh.lazySingleton<_i31.SignInWithFacebook>(
+      () => _i31.SignInWithFacebook(get<_i25.AuthRepository>()));
+  gh.lazySingleton<_i32.SignInWithGoogle>(
+      () => _i32.SignInWithGoogle(get<_i25.AuthRepository>()));
+  gh.lazySingleton<_i33.SignInWithPhone>(
+      () => _i33.SignInWithPhone(get<_i25.AuthRepository>()));
+  gh.factory<_i34.PhoneSignUpVerificationCubit>(() =>
+      _i34.PhoneSignUpVerificationCubit(get<_i28.PhoneSignUp>(), get<_i19.SmsAutoFill>()));
+  gh.factory<_i34.UpdatePhoneVerificationCubit>(() => _i34.UpdatePhoneVerificationCubit(
+      get<_i20.UpdatePhoneNumber>(), get<_i19.SmsAutoFill>()));
+  gh.lazySingleton<_i35.VerifyPhoneNumber>(
+      () => _i35.VerifyPhoneNumber(get<_i25.AuthRepository>()));
+  gh.factory<_i36.AppBloc>(
+      () => _i36.AppBloc(authRepository: get<_i25.AuthRepository>()));
+  gh.factory<_i37.ChangePhoneCubit>(() => _i37.ChangePhoneCubit(
+      get<_i35.VerifyPhoneNumber>(), get<_i20.UpdatePhoneNumber>()));
+  gh.factory<_i38.CompleteFormCubit>(
+      () => _i38.CompleteFormCubit(get<_i27.LinkEmailAndPassword>()));
+  gh.factory<_i39.EmailFormCubit>(
+      () => _i39.EmailFormCubit(get<_i29.SignInWithEmailAndPassword>()));
+  gh.factory<_i40.OTPCubit>(() => _i40.OTPCubit(
+      verifyPhoneNumber: get<_i35.VerifyPhoneNumber>(),
+      phoneSignUp: get<_i28.PhoneSignUp>()));
+  gh.factory<_i41.PhoneFormCubit>(
+      () => _i41.PhoneFormCubit(get<_i35.VerifyPhoneNumber>()));
+  gh.factory<_i42.PhoneSignInCubit>(() => _i42.PhoneSignInCubit(
+      get<_i35.VerifyPhoneNumber>(), get<_i33.SignInWithPhone>()));
+  gh.factory<_i34.PhoneSignInVerificationCubit>(() => _i34.PhoneSignInVerificationCubit(
+      get<_i33.SignInWithPhone>(), get<_i19.SmsAutoFill>()));
   return get;
 }
 
-class _$RegisterModule extends _i37.RegisterModule {}
+class _$RegisterModule extends _i43.RegisterModule {}

@@ -44,7 +44,6 @@ class AccountInfoCubit extends Cubit<AccountInfoState> {
 
   Future<void> updateProfile() async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
-    await Future.delayed(const Duration(seconds: 2));
     final either = await _updateProfile(
         params: UpdateProfileParams(
       name: state.name.value,

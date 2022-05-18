@@ -126,18 +126,20 @@ class AuthApiServiceImpl implements AuthApiService {
   @override
   Future<void> verifyPhone({
     required String phoneNumber,
-    required void Function(PhoneAuthCredential p1) verificationCompleted,
-    required void Function(FirebaseAuthException p1) verificationFailed,
+    required void Function(PhoneAuthCredential phoneAuthCredential)
+        verificationCompleted,
+    required void Function(FirebaseAuthException verificationFailed)
+        verificationFailed,
     required void Function(String p1, int? p2) codeSent,
     required void Function(String p1) codeAutoRetrievalTimeout,
   }) async {
     return firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: verificationCompleted,
-      verificationFailed: verificationFailed,
-      codeSent: codeSent,
-      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-    );
+        phoneNumber: phoneNumber,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+        timeout: const Duration(seconds: 5));
   }
 
   @override

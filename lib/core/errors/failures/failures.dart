@@ -9,6 +9,9 @@ abstract class Failure extends Equatable {
 class ServerFailure extends Failure {
   final String message;
   ServerFailure(this.message);
+
+  ServerFailure.internetConnection()
+      : message = 'Please, check internet connection.';
 }
 
 class CacheFailure extends Failure {}

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class InternationalPhoneTextField extends StatelessWidget {
   const InternationalPhoneTextField(
       {Key? key,
+      this.controller,
       this.hintText,
       this.initialNumber,
-      required this.errorText,
+      this.errorText,
       this.countries,
       required this.onInputChanged,
       this.isEnabled})
       : super(key: key);
+  final TextEditingController? controller;
   final String? hintText;
   final String? initialNumber;
-  final String? Function() errorText;
+  final String? Function()? errorText;
   final List<String>? countries;
   final bool? isEnabled;
   final void Function(PhoneNumber)? onInputChanged;
@@ -25,21 +28,22 @@ class InternationalPhoneTextField extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return InternationalPhoneNumberInput(
-              hintText: hintText,
-              onInputChanged: onInputChanged,
               initialValue: snapshot.data,
+              textFieldController: controller,
+              hintText: hintText,
+              inputDecoration: InputDecoration(errorText: errorText?.call()),
+              onInputChanged: onInputChanged,
+              keyboardType: TextInputType.number,
               spaceBetweenSelectorAndTextField: 8,
+              selectorConfig: const SelectorConfig(
+                setSelectorButtonAsPrefixIcon: true,
+                leadingPadding: 16,
+              ),
               formatInput: true,
               isEnabled: isEnabled ?? true,
-              searchBoxDecoration:
-                  const InputDecoration(border: OutlineInputBorder()),
-              inputDecoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                errorText: errorText.call(),
-              ),
-              selectorTextStyle: const TextStyle(fontWeight: FontWeight.bold),
-              textStyle: const TextStyle(fontWeight: FontWeight.bold),
-              countries:countries,
+              selectorTextStyle:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              countries: countries,
             );
           } else {
             return Container();
@@ -48,16 +52,20 @@ class InternationalPhoneTextField extends StatelessWidget {
       );
     }
     return InternationalPhoneNumberInput(
+      textFieldController: controller,
       hintText: hintText,
+      inputDecoration: InputDecoration(errorText: errorText?.call()),
       onInputChanged: onInputChanged,
+      keyboardType: TextInputType.number,
       spaceBetweenSelectorAndTextField: 8,
-      searchBoxDecoration: const InputDecoration(border: OutlineInputBorder()),
-      inputDecoration: InputDecoration(
-        border: const OutlineInputBorder(),
-        errorText: errorText.call(),
+      selectorConfig: const SelectorConfig(
+        setSelectorButtonAsPrefixIcon: true,
+        leadingPadding: 16,
       ),
-      selectorTextStyle: const TextStyle(fontWeight: FontWeight.bold),
-      textStyle: const TextStyle(fontWeight: FontWeight.bold),
+      formatInput: true,
+      isEnabled: isEnabled ?? true,
+      selectorTextStyle:
+          const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       countries: countries,
     );
   }

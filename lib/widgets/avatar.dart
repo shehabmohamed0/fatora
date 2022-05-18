@@ -1,3 +1,4 @@
+import 'package:fatora/core/resources/assets_manager.dart';
 import 'package:flutter/material.dart';
 
 const _avatarSize = 48.0;
@@ -16,7 +17,7 @@ class Avatar extends StatelessWidget {
       color: Colors.transparent,
       child: Ink.image(
         image: (photo == null
-            ? const AssetImage('assets/profile.png')
+            ?  const AssetImage(ImageAssets.profile)
             : NetworkImage(photo)) as ImageProvider,
         fit: BoxFit.cover,
         width: 100,

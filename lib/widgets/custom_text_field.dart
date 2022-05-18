@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final String labelText;
-  final String helperText;
+  final String? helperText;
   final TextInputType? keyboaedType;
   final void Function(String text)? onChanged;
   final String? Function()? errorText;
   const CustomTextField({
     Key? key,
     required this.labelText,
-    required this.helperText,
+     this.helperText,
     this.keyboaedType,
     required this.onChanged,
     required this.errorText,

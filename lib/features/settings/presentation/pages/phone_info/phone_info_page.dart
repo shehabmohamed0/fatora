@@ -29,15 +29,15 @@ class PhoneInfoPage extends HookWidget {
           child: Column(
             children: [
               InternationalPhoneTextField(
-                countries: const ['Eg'],
+                countries: const ['EG'],
                 initialNumber: user.phoneNumber,
                 errorText: () => null,
                 isEnabled: false,
                 onInputChanged: (d) {},
+                
               ),
               const SizedBox(height: 8),
               SizedBox(
-                  height: 46,
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {

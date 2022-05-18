@@ -48,6 +48,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signInWithEmailAndPassword(
       SignInParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(ServerFailure.internetConnection());
+    }
     try {
       await authApiService.signInWithEmailAndPassword(
           params.email, params.password);
@@ -61,6 +64,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, void>> phoneSignUp(PhoneSignUpParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(ServerFailure.internetConnection());
+    }
     try {
       await authApiService.phoneSignUp(
         name: params.name,
@@ -113,11 +119,15 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> signInWithPhone(
       PhoneSignInParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(ServerFailure.internetConnection());
+    }
     try {
       await authApiService
           .signInWithPhoneCredential(params.phoneAuthCredential);
       return const Right(null);
     } on FirebaseAuthException catch (e) {
+      log(e.code);
       return Left(SignInWithCredentialFailure.fromCode(e.code));
     } on Exception {
       return const Left(SignInWithCredentialFailure());
@@ -126,11 +136,10 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, void>> verifyPhone(VerifyPhoneParams params) async {
+    if (!await networkInfo.isConnected) {
+      return Left(ServerFailure.internetConnection());
+    }
     try {
-      if (!await networkInfo.isConnected) {
-        return Left(
-            ServerFailure('Please Check internet Connection and try again.'));
-      }
       await authApiService.verifyPhone(
           phoneNumber: params.phoneNumber,
           verificationCompleted: params.verificationCompleted,
@@ -141,10 +150,10 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } on FirebaseAuthException catch (e) {
       log(e.code);
-      return Left(ServerFailure('Firebase exception here'));
+      return Left(ServerFailure('Firebase failure verifiy phone'));
     } on Exception catch (e) {
       log(e.toString());
-      return Left(ServerFailure('exception here'));
+      return Left(ServerFailure('general exception verifiy phone'));
     }
   }
 

@@ -41,4 +41,15 @@ extension ValidationError on PhoneNumber {
     }
     return null;
   }
+
+  String? validationMessageWithOldPhone(String oldPHoneNumber) {
+    if (invalid) {
+      if (error == PhoneValidationError.invalid) {
+        return 'Invalid phone number.';
+      }
+    } else if (value == oldPHoneNumber) {
+      return 'This phone number already linked';
+    }
+    return null;
+  }
 }

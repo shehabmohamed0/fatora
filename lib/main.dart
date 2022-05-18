@@ -1,4 +1,3 @@
-
 import 'package:fatora/bloc_observer.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
 import 'package:fatora/locator/locator.dart';
@@ -8,6 +7,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'core/resources/theme_manager.dart';
 
 Future<void> main() {
   return BlocOverrides.runZoned(
@@ -29,8 +30,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AppBloc(authRepository: locator()),
+    return BlocProvider<AppBloc>(
+      create: (_) => locator(),
       child: const AppView(),
     );
   }
@@ -45,10 +46,7 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
-      ),
+      theme: getApplicationTheme(),
       onGenerateRoute: AppRouter.generateRoute,
       initialRoute: Routes.landingPage,
       builder: EasyLoading.init(),

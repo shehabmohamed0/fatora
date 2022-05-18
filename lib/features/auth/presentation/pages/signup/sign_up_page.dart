@@ -13,8 +13,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
-  
-
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
@@ -26,46 +24,26 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up')),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<SignUpFlowCubit>(
-            create: (_) => locator(),
-          ),
-          BlocProvider<SignUpFormCubit>(
-            create: (_) => locator(),
-          ),
-          BlocProvider<OTPCubit>(
-            create: (_) => locator(),
-          ),
-          BlocProvider<CompleteFormCubit>(
-            create: (_) => locator(),
-          ),
-        ],
-        child: BlocConsumer<SignUpFlowCubit, SignUpFlowState>(
-          buildWhen: (previous, current) => false,
-          listener: (context, state) {
-            pageController.animateToPage(
-              state.step,
-              duration: AppConstants.duration200ms,
-              curve: Curves.bounceIn,
-            );
-          },
-          builder: (context, state) {
-            return WillPopScope(
-              onWillPop: () =>
-                  context.read<SignUpFlowCubit>().previosStep(context),
-              child: PageView(
-                controller: pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: const [
-                  SignUpForm(),
-                  OTPCheckWidget(),
-                  CompleteForm()
-                ],
-              ),
-            );
-          },
-        ),
+      body: BlocConsumer<SignUpFlowCubit, SignUpFlowState>(
+        buildWhen: (previous, current) => false,
+        listener: (context, state) {
+          pageController.animateToPage(
+            state.step,
+            duration: AppConstants.duration200ms,
+            curve: Curves.bounceIn,
+          );
+        },
+        builder: (context, state) {
+          return WillPopScope(
+            onWillPop: () =>
+                context.read<SignUpFlowCubit>().previosStep(context),
+            child: PageView(
+              controller: pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: const [SignUpForm(), OTPCheckWidget(), CompleteForm()],
+            ),
+          );
+        },
       ),
     );
   }
