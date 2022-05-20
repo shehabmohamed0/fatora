@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fatora/core/enums/otp_status.dart';
 import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
 import 'package:fatora/core/errors/failures/failures.dart';
 import 'package:fatora/core/errors/failures/settings/update_phone_number_failure.dart';
@@ -16,14 +15,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
 
-part 'change_phone_state.dart';
+part 'update_phone_state.dart';
 
 @injectable
-class ChangePhoneCubit extends Cubit<ChangePhoneState> {
+class UpdateePhoneCubit extends Cubit<UpdatePhoneState> {
   final VerifyPhoneNumber _verifyPhoneNumber;
   final UpdatePhoneNumber _updatePhoneNumber;
-  ChangePhoneCubit(this._verifyPhoneNumber, this._updatePhoneNumber)
-      : super(const ChangePhoneState());
+  UpdateePhoneCubit(this._verifyPhoneNumber, this._updatePhoneNumber)
+      : super(const UpdatePhoneState());
 
   void phoneChanged(String phoneNumber) {
     final newPhone = PhoneNumber.dirty(phoneNumber);

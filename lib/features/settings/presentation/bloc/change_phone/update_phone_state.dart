@@ -1,7 +1,7 @@
-part of 'change_phone_cubit.dart';
+part of 'update_phone_cubit.dart';
 
-class ChangePhoneState extends Equatable {
-  const ChangePhoneState({
+class UpdatePhoneState extends Equatable {
+  const UpdatePhoneState({
     this.phoneNumber = const PhoneNumber.pure(),
     this.phoneFormStatus = FormzStatus.pure,
     this.otp = const OTP.pure(),
@@ -26,7 +26,7 @@ class ChangePhoneState extends Equatable {
 
   final String? errorMessage;
   final int step;
-  ChangePhoneState copyWith({
+  UpdatePhoneState copyWith({
     PhoneNumber? phoneNumber,
     FormzStatus? phoneFormStatus,
     OTP? otp,
@@ -37,7 +37,7 @@ class ChangePhoneState extends Equatable {
     int? step,
     String? errorMessage,
   }) {
-    return ChangePhoneState(
+    return UpdatePhoneState(
       phoneNumber: phoneNumber ?? this.phoneNumber,
       phoneFormStatus: phoneFormStatus ?? this.phoneFormStatus,
       otp: otp ?? this.otp,

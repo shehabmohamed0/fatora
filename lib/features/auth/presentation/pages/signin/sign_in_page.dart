@@ -1,3 +1,6 @@
+import 'package:dartz/dartz.dart';
+import 'package:fatora/core/form_inputs/email.dart';
+import 'package:fatora/core/form_inputs/password.dart';
 import 'package:fatora/core/form_inputs/phone_number.dart';
 import 'package:fatora/core/resources/assets_manager.dart';
 import 'package:fatora/core/resources/constants_manager.dart';
@@ -15,6 +18,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:formz/formz.dart';
 
 import '../../../../../widgets/international_phone_text_field.dart';
+import '../../../../../widgets/password_text_field.dart';
 
 part 'widgets/email_sign_in_form.dart';
 part 'widgets/phone_sign_in_form.dart';
@@ -36,37 +40,42 @@ class SignInPage extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 48),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Text(
                     'Login Account',
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
                 const SizedBox(height: 32),
-                LayoutBuilder(builder: (context, constrains) {
-                  return ToggleButton(
-                    width: constrains.maxWidth,
-                    height: 50.0,
-                    toggleBackgroundColor: const Color(0xffF6F5FA),
-                    toggleBorderColor: (Colors.grey[350])!,
-                    toggleColor: Colors.white,
-                    inActiveTextColor: Colors.grey,
-                    activeTextColor: Colors.black54,
-                    leftDescription: 'Email',
-                    rightDescription: 'Phone number',
-                    onLeftToggleActive: () {
-                      context.read<LoginFormSelectionCubit>().showEmaileForm();
-                      context.read<PhoneFormCubit>().reset();
-                    },
-                    onRightToggleActive: () {
-                      context.read<LoginFormSelectionCubit>().showPhoneForm();
-                      context.read<EmailFormCubit>().reset();
-                    },
-                  );
-                }),
+                LayoutBuilder(
+                  builder: (context, constrains) {
+                    return ToggleButton(
+                      width: constrains.maxWidth,
+                      height: 50.0,
+                      toggleBackgroundColor: const Color(0xffF6F5FA),
+                      toggleBorderColor: Colors.grey[350]!,
+                      toggleColor: Colors.white,
+                      inActiveTextColor: Colors.grey,
+                      activeTextColor: Colors.black54,
+                      leftDescription: 'Email',
+                      rightDescription: 'Phone number',
+                      onLeftToggleActive: () {
+                        context
+                            .read<LoginFormSelectionCubit>()
+                            .showEmaileForm();
+                        context.read<PhoneFormCubit>().reset();
+                      },
+                      onRightToggleActive: () {
+                        context.read<LoginFormSelectionCubit>().showPhoneForm();
+                        context.read<EmailFormCubit>().reset();
+                      },
+                    );
+                  },
+                ),
                 BlocConsumer<LoginFormSelectionCubit, LoginFormSelectionState>(
                   listener: (context, state) {
                     if (state is LoginFormEmail) {
@@ -76,53 +85,19 @@ class SignInPage extends StatelessWidget {
                     return AnimatedSwitcher(
                       duration: AppConstants.duration200ms,
                       child: state is LoginFormPhone
-                          ? const PhoneSignInForm()
-                          : const EmailSignInForm(),
+                          ? const SizedBox(
+                              key: Key('1'),
+                              height: 400,
+                              child: PhoneSignInForm(),
+                            )
+                          : const SizedBox(
+                              key: Key('2'),
+                              height: 400,
+                              child: EmailSignInForm(),
+                            ),
                     );
                   },
                 ),
-                const SizedBox(height: 32),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Expanded(
-                        child: Divider(
-                      thickness: 1,
-                      color: Colors.black,
-                    )),
-                    const SizedBox(width: 4),
-                    Text(
-                      'or sign in with Google',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(width: 4),
-                    const Expanded(
-                        child: Divider(
-                      thickness: 1,
-                      color: Colors.black,
-                    )),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                const SizedBox(height: 32),
-                Row(
-                  children: [
-                    Text(
-                      'Not registered yet?',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    TextButton(
-                        style: TextButton.styleFrom(
-                            visualDensity: VisualDensity.compact),
-                        onPressed: () {
-                          Navigator.pushNamed(context, Routes.signup);
-                        },
-                        child: Text(
-                          'Create an Account.',
-                          style: TextStyle(color: Colors.orange.shade900),
-                        ))
-                  ],
-                )
               ],
             ),
           ),
@@ -131,3 +106,25 @@ class SignInPage extends StatelessWidget {
     );
   }
 }
+ // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Expanded(
+                //         child: Divider(
+                //       thickness: 1,
+                //       color: Colors.black,
+                //     )),
+                //     const SizedBox(width: 4),
+                //     Text(
+                //       'or sign in with Google',
+                //       style: Theme.of(context).textTheme.bodySmall,
+                //     ),
+                //     const SizedBox(width: 4),
+                //     const Expanded(
+                //         child: Divider(
+                //       thickness: 1,
+                //       color: Colors.black,
+                //     )),
+                //   ],
+                // ),
+                // const SizedBox(height: 32),

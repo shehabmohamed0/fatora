@@ -6,12 +6,14 @@ import 'package:equatable/equatable.dart';
 import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
 import 'package:fatora/core/errors/failures/failures.dart';
 import 'package:fatora/core/params/auth/phone_sign_in_params.dart';
+import 'package:fatora/core/params/auth/phone_sign_up_params.dart';
 import 'package:fatora/features/auth/domain/usecases/phone_sign_up.dart';
 import 'package:fatora/features/auth/domain/usecases/sign_in_with_phone.dart';
 import 'package:fatora/features/settings/domain/usecases/update_phone_number.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:formz/formz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:pinput/pinput.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 import '../../../../../core/form_inputs/otp.dart';
@@ -108,5 +110,28 @@ class PhoneSignUpVerificationCubit extends VerifiyPhoneCubit {
       : super(autoFill);
   final PhoneSignUp _phoneSignUp;
 
-  Future<void> submit() async {}
+  Future<void> submit(
+      String name, String phoneNumber, String verificationId) async {
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
+
+    final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: state.otp.value);
+
+    final either = await _phoneSignUp(
+      params: PhoneSignUpParams(
+        name: name,
+        phoneNumber: phoneNumber,
+        phoneCredential: credential,
+      ),
+    );
+    either.fold((failure) {
+      if (failure is SignInWithCredentialFailure) {
+        emit(state.copyWith(
+            errorMessage: failure.message,
+            status: FormzStatus.submissionFailure));
+      }
+    }, (success) {
+      emit(state.copyWith(status: FormzStatus.submissionSuccess));
+    });
+  }
 }

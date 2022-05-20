@@ -4,15 +4,16 @@ import 'package:fatora/features/auth/presentation/bloc/sign_up/otp_cubit/otp_cub
 import 'package:fatora/features/auth/presentation/bloc/sign_up/sign_up_form/sign_up_form_cubit.dart';
 import 'package:fatora/features/auth/presentation/pages/landing/landing_page.dart';
 import 'package:fatora/features/auth/presentation/pages/signup/sign_up_page.dart';
-import 'package:fatora/features/auth/presentation/pages/verifiy_phone/verifiy_phone_page.dart';
 import 'package:fatora/features/settings/presentation/bloc/add_email/add_email_cubit.dart';
+import 'package:fatora/features/settings/presentation/bloc/cubit/update_email_cubit.dart';
 import 'package:fatora/features/settings/presentation/pages/account_info/account_info_page.dart';
 import 'package:fatora/features/settings/presentation/pages/change_phone/change_phone_page.dart';
 import 'package:fatora/features/settings/presentation/pages/change_phone/otp_page.dart';
 import 'package:fatora/features/settings/presentation/pages/add_email/add_email_page.dart';
-import 'package:fatora/features/settings/presentation/pages/email_info/email_info_page.dart';
+import 'package:fatora/features/settings/presentation/pages/contact_info/contact_info_page.dart';
 import 'package:fatora/features/settings/presentation/pages/phone_info/phone_info_page.dart';
 import 'package:fatora/features/settings/presentation/pages/settings/settings_page.dart';
+import 'package:fatora/features/settings/presentation/pages/update_email/update_email_page.dart';
 import 'package:fatora/locator/locator.dart';
 import 'package:fatora/router/routes.dart';
 import 'package:flutter/material.dart';
@@ -65,17 +66,14 @@ class AppRouter {
         return _getPageRoute(
             routeName: settings.name,
             builder: (context) => const PhoneInfoPage());
-      case Routes.changePhone:
+      case Routes.updatePhone:
         return _getPageRoute(
             routeName: settings.name,
             builder: (context) => const ChangePhonePage());
       case Routes.otp:
         return _getPageRoute(
             routeName: settings.name, builder: (context) => const OTPPage());
-      case Routes.emailInfo:
-        return _getPageRoute(
-            routeName: settings.name,
-            builder: (context) => const EmailInfoPage());
+
       case Routes.addEmail:
         return _getPageRoute(
             routeName: settings.name,
@@ -83,6 +81,19 @@ class AppRouter {
                   create: (context) => locator(),
                   child: const AddEmailPage(),
                 ));
+      case Routes.contactInfo:
+        return _getPageRoute(
+          routeName: settings.name,
+          builder: (context) => const ContactInfoPage(),
+        );
+      case Routes.updateEmail:
+        return _getPageRoute(
+          routeName: settings.name,
+          builder: (context) => BlocProvider<UpdateEmailCubit>(
+            create: (context) => locator(),
+            child: const UpdateEmailPage(),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

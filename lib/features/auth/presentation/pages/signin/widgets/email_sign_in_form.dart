@@ -29,19 +29,59 @@ class EmailSignInForm extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 4),
-            const TextField(),
+            TextField(
+              onChanged: context.read<EmailFormCubit>().emailChanged,
+              decoration:
+                  InputDecoration(errorText: state.email.validationMessage()),
+            ),
             const SizedBox(height: 16),
             Text(
               'Password',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 4),
-            const TextField(),
+            PasswordTextField(
+              onChanged: context.read<EmailFormCubit>().passwordChanged,
+              errorText: state.password.validationMessage(),
+            ),
             const SizedBox(height: 32),
             SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: () {}, child: const Text('Login')))
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: !state.status.isInvalid &&
+                        !state.status.isSubmissionInProgress&& !state.status.isPure
+                    ? context.read<EmailFormCubit>().signInWithEmailAndPassword
+                    : null,
+                child: state.status.isSubmissionInProgress
+                    ? CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      )
+                    : const Text(
+                        'Login',
+                        style: TextStyle(letterSpacing: 2),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Text(
+                  'Not registered yet?',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact),
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.signup);
+                  },
+                  child: Text(
+                    'Create an Account.',
+                    style: TextStyle(color: Colors.orange.shade900),
+                  ),
+                )
+              ],
+            )
           ],
         );
       },

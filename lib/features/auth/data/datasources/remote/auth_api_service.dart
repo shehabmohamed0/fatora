@@ -146,13 +146,11 @@ class AuthApiServiceImpl implements AuthApiService {
   Future<void> linkEmailAndPassword(String email, String password) async {
     final credential =
         EmailAuthProvider.credential(email: email, password: password);
-
+    log('here');
     final user = firebaseAuth.currentUser!;
-    await user.linkWithCredential(credential).then((userCredential) {
-      final userDoc =
-          firestore.doc(FirestorePath.user(userCredential.user!.uid));
-      userDoc.update({'email': email});
-    });
+    await user.linkWithCredential(credential);
+    final userDoc = firestore.doc(FirestorePath.user(user.uid));
+    await userDoc.update({'email': email});
   }
 
   @override

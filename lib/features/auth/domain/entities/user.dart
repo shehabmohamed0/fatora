@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 class User extends Equatable {
+  @JsonKey(defaultValue: '')
   final String id;
   final String name;
   final String? email;

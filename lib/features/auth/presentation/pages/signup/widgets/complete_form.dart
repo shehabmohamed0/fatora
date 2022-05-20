@@ -131,7 +131,7 @@ class _AddButton extends StatelessWidget {
     return BlocBuilder<CompleteFormCubit, CompleteFormState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) => state.status.isSubmissionInProgress
-          ? const CircularProgressIndicator()
+          ?  CircularProgressIndicator(color: Theme.of(context).primaryColor,)
           : ElevatedButton(
               onPressed: state.status.isValid
                   ? context.read<CompleteFormCubit>().submit

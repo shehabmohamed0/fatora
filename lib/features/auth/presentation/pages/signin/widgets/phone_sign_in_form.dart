@@ -40,7 +40,7 @@ class PhoneSignInForm extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 52),
+            const SizedBox(height: 12),
             Text(
               'Phone number',
               style: Theme.of(context).textTheme.titleMedium,
@@ -58,7 +58,7 @@ class PhoneSignInForm extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: !state.status.isInvalid &&
-                        !state.status.isSubmissionInProgress
+                        !state.status.isSubmissionInProgress&& !state.status.isPure
                     ? context.read<PhoneFormCubit>().verifiy
                     : null,
                 child: state.status.isSubmissionInProgress
@@ -71,6 +71,26 @@ class PhoneSignInForm extends StatelessWidget {
                       ),
               ),
             ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Text(
+                  'Not registered yet?',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      visualDensity: VisualDensity.compact),
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.signup);
+                  },
+                  child: Text(
+                    'Create an Account.',
+                    style: TextStyle(color: Colors.orange.shade900),
+                  ),
+                )
+              ],
+            )
           ],
         );
       },

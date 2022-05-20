@@ -1,6 +1,6 @@
 import 'package:fatora/core/resources/constants_manager.dart';
 import 'package:fatora/core/resources/values_manager.dart';
-import 'package:fatora/features/settings/presentation/bloc/change_phone/change_phone_cubit.dart';
+import 'package:fatora/features/settings/presentation/bloc/change_phone/update_phone_cubit.dart';
 import 'package:fatora/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +19,7 @@ class OTPPage extends HookWidget {
         centerTitle: true,
         title: const Text('Verification'),
       ),
-      body: BlocConsumer<ChangePhoneCubit, ChangePhoneState>(
+      body: BlocConsumer<UpdateePhoneCubit, UpdatePhoneState>(
         listener: (context, state) {
           if (state.otpFormStatus.isSubmissionSuccess) {
             Navigator.popUntil(
@@ -57,9 +57,9 @@ class OTPPage extends HookWidget {
                     Pinput(
                       controller: controller,
                       length: 6,
-                      onChanged: context.read<ChangePhoneCubit>().otpChanged,
+                      onChanged: context.read<UpdateePhoneCubit>().otpChanged,
                       onCompleted:
-                          context.read<ChangePhoneCubit>().onCompletedOneTime,
+                          context.read<UpdateePhoneCubit>().onCompletedOneTime,
                     ),
                     const SizedBox(height: 24),
                     Align(
@@ -103,7 +103,7 @@ class OTPPage extends HookWidget {
                       child: ElevatedButton(
                         onPressed: state.otpFormStatus.isValid ||
                                 state.otpFormStatus.isSubmissionFailure
-                            ? context.read<ChangePhoneCubit>().complete
+                            ? context.read<UpdateePhoneCubit>().complete
                             : null,
                         child: const Text(
                           'Verify',
@@ -121,7 +121,7 @@ class OTPPage extends HookWidget {
     );
   }
 
-  bool _buildWhen(ChangePhoneState previous, ChangePhoneState current) =>
+  bool _buildWhen(UpdatePhoneState previous, UpdatePhoneState current) =>
       previous.otp != current.otp ||
       previous.otpFormStatus != current.otpFormStatus ||
       previous.otpFormCompletedOneTime != current.otpFormCompletedOneTime ||

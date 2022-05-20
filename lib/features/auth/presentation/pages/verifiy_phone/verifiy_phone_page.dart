@@ -55,9 +55,8 @@ class VerifiyPhonePage<T extends VerifiyPhoneCubit> extends HookWidget {
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
-                          .headlineMedium!
-                          .copyWith(
-                              color: Colors.grey, fontWeight: FontWeight.w500),
+                          .bodyLarge!
+                          .copyWith(color: Colors.grey),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -73,11 +72,8 @@ class VerifiyPhonePage<T extends VerifiyPhoneCubit> extends HookWidget {
                           showSnackBar(context, state.errorMessage ?? 'failed');
                         }
                       },
-                     
                       builder: (context, state) {
                         if (state.autoRecievedCode) {
-
-
                           textController.text = state.otp.value;
                           print(textController.value);
                         }

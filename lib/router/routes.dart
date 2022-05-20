@@ -7,9 +7,10 @@ class Routes {
   static const verifiyPhone = '/verifiyPhone';
   static const settings = '/settings';
   static const accountInfo = '/accountInfo';
-  static const emailInfo = '/emailInfo';
+  static const contactInfo = '/contactInfo';
   static const phoneInfo = '/phoneInfo';
-  static const changePhone = '/changePhone';
+  static const updatePhone = '/updatePhone';
   static const otp = '/otp';
   static const addEmail = '/addEmail';
+  static const updateEmail = '/updateEmail';
 }

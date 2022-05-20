@@ -26,3 +26,14 @@ class Email extends FormzInput<String, EmailValidationError> {
         : EmailValidationError.invalid;
   }
 }
+
+extension ValidationError on Email {
+  String? validationMessage() {
+    if (invalid) {
+      if (error == EmailValidationError.invalid) {
+        return 'Invalid email address.';
+      }
+    }
+    return null;
+  }
+}

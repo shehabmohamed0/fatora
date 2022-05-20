@@ -1,12 +1,10 @@
 import 'package:fatora/core/resources/values_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
-import 'package:fatora/features/settings/presentation/pages/change_phone/change_phone_page.dart';
 import 'package:fatora/router/routes.dart';
 import 'package:fatora/widgets/international_phone_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PhoneInfoPage extends HookWidget {
   const PhoneInfoPage({Key? key}) : super(key: key);
@@ -34,14 +32,13 @@ class PhoneInfoPage extends HookWidget {
                 errorText: () => null,
                 isEnabled: false,
                 onInputChanged: (d) {},
-                
               ),
               const SizedBox(height: 8),
               SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, Routes.changePhone);
+                        Navigator.pushNamed(context, Routes.updatePhone);
                       },
                       child: const Text('Change')))
             ],
@@ -75,7 +72,7 @@ class GenderRadio extends StatelessWidget {
           onChanged: onChanged,
           visualDensity: VisualDensity.comfortable,
         ),
-        Text(title, style: Theme.of(context).textTheme.titleSmall)
+        Text(title, style: Theme.of(context).textTheme.titleSmall!)
       ],
     );
   }
@@ -94,27 +91,49 @@ class SettingsTextFormField extends StatelessWidget {
 
   final TextEditingController? controller;
   final String labelText;
-  final Icon? suffixIcon;
+  final Widget? suffixIcon;
   final String? initialValue;
   final bool enabled;
   final void Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      initialValue: initialValue,
-      enabled: enabled,
-      onChanged: onChanged,
-      readOnly: !enabled,
-      style:
-          const TextStyle(fontWeight: FontWeight.w600, fontSize: AppSize.s18),
-      decoration: InputDecoration(
-        suffixIcon: suffixIcon,
-        labelText: labelText,
-        labelStyle: TextStyle(
-          color: Colors.grey.shade400,
-          fontWeight: FontWeight.w500,
-          fontSize: AppSize.s14,
+    return Theme(
+      data: ThemeData(
+        textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(
+          primary: Theme.of(context).primaryColor
+        )),
+        inputDecorationTheme: InputDecorationTheme(
+          focusColor: Theme.of(context).primaryColor,
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+          disabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey.shade400,
+            ),
+          ),
+          iconColor: Theme.of(context).primaryColor,
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        initialValue: initialValue,
+        enabled: enabled,
+        onChanged: onChanged,
+        readOnly: !enabled,
+        cursorColor: Theme.of(context).primaryColor,
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: AppSize.s18,
+            color: enabled ? Colors.black87 : Colors.black45),
+        decoration: InputDecoration(
+          suffixIcon: suffixIcon,
+          labelText: labelText,
+          labelStyle: TextStyle(
+            color: Colors.grey.shade400,
+            fontWeight: FontWeight.w500,
+            fontSize: AppSize.s14,
+          ),
         ),
       ),
     );

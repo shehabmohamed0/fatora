@@ -1,7 +1,7 @@
 import 'package:fatora/core/form_inputs/phone_number.dart';
 import 'package:fatora/core/resources/values_manager.dart';
 import 'package:fatora/features/auth/presentation/bloc/app_status/app_bloc.dart';
-import 'package:fatora/features/settings/presentation/bloc/change_phone/change_phone_cubit.dart';
+import 'package:fatora/features/settings/presentation/bloc/change_phone/update_phone_cubit.dart';
 import 'package:fatora/features/settings/presentation/pages/change_phone/otp_page.dart';
 import 'package:fatora/locator/locator.dart';
 import 'package:fatora/widgets/international_phone_text_field.dart';
@@ -17,7 +17,7 @@ class ChangePhonePage extends HookWidget {
   Widget build(BuildContext context) {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     final textController = useTextEditingController();
-    return BlocProvider<ChangePhoneCubit>(
+    return BlocProvider<UpdateePhoneCubit>(
       create: (context) => locator(),
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -28,7 +28,7 @@ class ChangePhonePage extends HookWidget {
           foregroundColor: Colors.black,
           backgroundColor: Colors.white,
         ),
-        body: BlocConsumer<ChangePhoneCubit, ChangePhoneState>(
+        body: BlocConsumer<UpdateePhoneCubit, UpdatePhoneState>(
           listenWhen: (previous, current) =>
               previous.phoneNumber != current.phoneNumber ||
               previous.phoneFormStatus != current.phoneFormStatus,
@@ -65,7 +65,7 @@ class ChangePhonePage extends HookWidget {
                       },
                       onInputChanged: (phoneNumber) {
                         context
-                            .read<ChangePhoneCubit>()
+                            .read<UpdateePhoneCubit>()
                             .phoneChanged(phoneNumber.phoneNumber!);
                       },
                     ),
@@ -78,7 +78,7 @@ class ChangePhonePage extends HookWidget {
                                         state.phoneNumber.value !=
                                             user.phoneNumber ||
                                     state.phoneFormStatus.isSubmissionFailure
-                                ? context.read<ChangePhoneCubit>().verifiyPhone
+                                ? context.read<UpdateePhoneCubit>().verifiyPhone
                                 : null,
                             child: const Text('Submit'))),
                   ])),
@@ -93,8 +93,8 @@ class ChangePhonePage extends HookWidget {
     return Navigator.push<T>(
       context,
       MaterialPageRoute(
-        builder: (_) => BlocProvider<ChangePhoneCubit>.value(
-          value: context.read<ChangePhoneCubit>(),
+        builder: (_) => BlocProvider<UpdateePhoneCubit>.value(
+          value: context.read<UpdateePhoneCubit>(),
           child: const OTPPage(),
         ),
       ),

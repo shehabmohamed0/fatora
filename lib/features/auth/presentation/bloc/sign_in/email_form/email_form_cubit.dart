@@ -37,7 +37,7 @@ class EmailFormCubit extends Cubit<EmailFormState> {
 
   Future<void> signInWithEmailAndPassword() async {
     if (!state.status.isValidated) return;
-
+    emit(state.copyWith(status: FormzStatus.submissionInProgress));
     final either = await _signInWithEmailAndPassword(
         params: SignInParams(
             email: state.email.value, password: state.password.value));

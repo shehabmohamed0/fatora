@@ -1,15 +1,18 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fatora/core/errors/failures/failures.dart';
 import 'package:dartz/dartz.dart';
+import 'package:fatora/core/errors/failures/firestore_failure.dart';
+import 'package:fatora/core/errors/failures/settings/update_email_failure.dart';
 import 'package:fatora/core/errors/failures/settings/update_phone_number_failure.dart';
+import 'package:fatora/core/params/settings/add_email_params.dart';
+import 'package:fatora/core/params/settings/update_email.dart';
 import 'package:fatora/core/params/settings/update_phone_params.dart';
 import 'package:fatora/core/params/settings/update_profile_params.dart';
 import 'package:fatora/core/services/network/network_info.dart';
 import 'package:fatora/features/settings/data/datasources/profile_api_service.dart';
 import 'package:fatora/features/settings/domain/repositories/profile_repository.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: ProfileRepository)
@@ -32,10 +35,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
 
       return const Right(null);
-    } on PlatformException catch (e) {
+    } on FirebaseException catch (e) {
       log(e.code);
-      log(e.message ?? 'No message provided');
-      return Left(ServerFailure('firebase failure in update profile'));
+      return Left(FirestoreFailure());
     } on Exception catch (e) {
       log('${e.runtimeType}');
       return Left(ServerFailure('General failure in update profile'));
@@ -52,9 +54,52 @@ class ProfileRepositoryImpl implements ProfileRepository {
       await _profileApiService.updatePhoneNumber(
           params.phoneNumber, params.phoneCredential);
       return const Right(null);
-    } on FirebaseException catch (e) {
+    } on FirebaseAuthException catch (e) {
       log(e.code);
       return Left(UpdatePhoneNumberFailure.fromCode(e.code));
+    } on FirebaseException catch (e) {
+      log(e.code);
+      return Left(FirestoreFailure());
+    } on Exception {
+      return const Left(UpdatePhoneNumberFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> linkEmailAndPassword(
+      LinkEmailAndPasswordParams params) async {
+    if (!await _networkInfo.isConnected) {
+      return Left(ServerFailure.internetConnection());
+    }
+    try {
+      await _profileApiService.linkEmailAndPassword(
+          params.email, params.password);
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      log(e.code);
+      return Left(UpdatePhoneNumberFailure.fromCode(e.code));
+    } on FirebaseException catch (e) {
+      log(e.code);
+      return Left(FirestoreFailure());
+    } on Exception {
+      return const Left(UpdatePhoneNumberFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateEmail(UpdateEmailParams params) async {
+    if (!await _networkInfo.isConnected) {
+      return Left(ServerFailure.internetConnection());
+    }
+    try {
+      await _profileApiService.updateEmail(
+          params.newEmail, params.currentEmail, params.currentPassword);
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      log(e.code);
+      return Left(UpdateEmailFailure.fromCode(e.code));
+    } on FirebaseException {
+      return Left(FirestoreFailure());
     } on Exception {
       return const Left(UpdatePhoneNumberFailure());
     }

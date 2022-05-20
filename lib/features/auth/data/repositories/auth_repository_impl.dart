@@ -5,6 +5,8 @@ import 'package:fatora/core/errors/exceptions/auth/google_sign_in_exceptions.dar
 import 'package:fatora/core/errors/failures/auth/link_email_and_password_failure.dart';
 import 'package:fatora/core/errors/failures/auth/sign_in_with_email_and_password_exception.dart';
 import 'package:fatora/core/errors/failures/auth/sign_in_with_credential_failure.dart';
+import 'package:fatora/core/errors/failures/firestore_failure.dart';
+import 'package:fatora/core/errors/failures/reauthenticate_user_failure.dart';
 import 'package:fatora/core/params/auth/link_email_and_password_params.dart';
 import 'package:fatora/core/params/auth/phone_sign_in_params.dart';
 import 'package:fatora/core/params/auth/phone_sign_up_params.dart';
@@ -56,7 +58,11 @@ class AuthRepositoryImpl implements AuthRepository {
           params.email, params.password);
       return const Right(null);
     } on FirebaseAuthException catch (e) {
+      log(e.code);
       return Left(SignInWithEmailAndPasswordFailure(e.code));
+    } on FirebaseException catch (e) {
+      log(e.code);
+      return Left(FirestoreFailure());
     } on Exception {
       return const Left(SignInWithEmailAndPasswordFailure());
     }
@@ -76,6 +82,12 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } on FirebaseAuthException catch (e) {
       return Left(SignInWithCredentialFailure(e.code));
+    } on FirebaseException catch (e) {
+      log(e.code);
+      return Left(FirestoreFailure());
+    } on Exception catch (e) {
+      log('${e.runtimeType}');
+      return const Left(SignInWithCredentialFailure());
     }
   }
 
@@ -164,6 +176,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await authApiService.linkEmailAndPassword(params.email, params.password);
       return const Right(null);
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        return Left(ReAuthenticateUserFailure());
+      }
       return Left(LinkEmailAndPasswordFailure.fromCode(e.code));
     } on Exception catch (e) {
       log(e.toString());

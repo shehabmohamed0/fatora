@@ -11,6 +11,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:formz/formz.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../router/routes.dart';
+import '../../widgets/settings_list_tile.dart';
+
 class AccountInfoPage extends HookWidget {
   const AccountInfoPage({Key? key}) : super(key: key);
 
@@ -62,6 +65,22 @@ class AccountInfoPage extends HookWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SettingsTextFormField(
+                    labelText: 'Email',
+                    enabled: false,
+                    initialValue: user.email,
+                    onChanged: context.read<AccountInfoCubit>().nameChanged,
+                    suffixIcon: Icon(Icons.email, color: Colors.grey.shade400),
+                  ),
+                  const SizedBox(height: 16),
+                  SettingsTextFormField(
+                    labelText: 'Phone',
+                    initialValue: user.phoneNumber,
+                    enabled: false,
+                    suffixIcon: Icon(Icons.phone, color: Colors.grey.shade400),
+                    onChanged: context.read<AccountInfoCubit>().nameChanged,
+                  ),
+                  const SizedBox(height: 16),
+                  SettingsTextFormField(
                     labelText: 'Name',
                     initialValue: state.name.value,
                     onChanged: context.read<AccountInfoCubit>().nameChanged,
@@ -70,10 +89,11 @@ class AccountInfoPage extends HookWidget {
                   GestureDetector(
                     onTap: () async {
                       final birthDate = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.utc(2000),
-                          initialDate: DateTime.now(),
-                          lastDate: DateTime.now());
+                        context: context,
+                        firstDate: DateTime.utc(1900),
+                        initialDate: DateTime.now(),
+                        lastDate: DateTime.now(),
+                      );
 
                       if (birthDate != null) {
                         context
@@ -85,7 +105,7 @@ class AccountInfoPage extends HookWidget {
                       controller: controller,
                       enabled: false,
                       labelText: 'Date of birth',
-                      suffixIcon: const Icon(Icons.calendar_today_outlined),
+                      suffixIcon: const Icon(Icons.calendar_today),
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -125,7 +145,6 @@ class AccountInfoPage extends HookWidget {
                   ),
                   const SizedBox(height: 32),
                   SizedBox(
-                    height: 48,
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: state.status.isSubmissionInProgress
@@ -146,6 +165,3 @@ class AccountInfoPage extends HookWidget {
     );
   }
 }
-
-
-

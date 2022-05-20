@@ -1,7 +1,7 @@
-part of 'add_email_cubit.dart';
+part of 'update_email_cubit.dart';
 
-class AddEmailState extends Equatable {
-  const AddEmailState({
+class UpdateEmailState extends Equatable {
+  const UpdateEmailState({
     this.email = const Email.pure(),
     this.password = const Password.pure(),
     this.status = FormzStatus.pure,
@@ -11,13 +11,14 @@ class AddEmailState extends Equatable {
   final Password password;
   final FormzStatus status;
   final String? errorMessage;
-  AddEmailState copyWith({
+
+  UpdateEmailState copyWith({
     Email? email,
     Password? password,
     FormzStatus? status,
     String? errorMessage,
   }) {
-    return AddEmailState(
+    return UpdateEmailState(
       email: email ?? this.email,
       password: password ?? this.password,
       status: status ?? this.status,
@@ -26,5 +27,5 @@ class AddEmailState extends Equatable {
   }
 
   @override
-  List<Object> get props => [email, password, status];
+  List<Object?> get props => [email, password, status, errorMessage];
 }

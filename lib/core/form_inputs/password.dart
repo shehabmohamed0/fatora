@@ -22,7 +22,16 @@ class Password extends FormzInput<String, PasswordValidationError> {
   @override
   PasswordValidationError? validator(String? value) {
     return (value?.length ?? 0) >= 8 ? null : PasswordValidationError.invalid;
-    
   }
 }
 
+extension ValidationError on Password {
+  String? validationMessage() {
+    if (invalid) {
+      if (error == PasswordValidationError.invalid) {
+        return 'Password must be at least 8 character.';
+      }
+    }
+    return null;
+  }
+}

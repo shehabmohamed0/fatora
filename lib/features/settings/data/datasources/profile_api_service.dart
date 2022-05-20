@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fatora/core/constants/firestore_path.dart';
+import 'package:fatora/features/settings/domain/usecases/update_email.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 
@@ -9,6 +10,10 @@ abstract class ProfileApiService {
 
   Future<void> updatePhoneNumber(
       String phoneNumber, PhoneAuthCredential phoneCredential);
+
+  Future<void> linkEmailAndPassword(String email, String password);
+  Future<void> updateEmail(
+      String newEmail, String currentEmail, String currentPassword);
 }
 
 @LazySingleton(as: ProfileApiService)
@@ -39,8 +44,32 @@ class ProfileApiServiceImpl implements ProfileApiService {
     final user = firebaseAuth.currentUser!;
     await user.updatePhoneNumber(phoneCredential);
     final userDoc = firestore.doc(FirestorePath.user(user.uid));
-    userDoc.update({
+    await userDoc.update({
       'phoneNumber': phoneNumber,
     });
+  }
+
+  @override
+  Future<void> linkEmailAndPassword(String email, String password) async {
+    final user = firebaseAuth.currentUser!;
+    final credential =
+        EmailAuthProvider.credential(email: email, password: password);
+    user.linkWithCredential(credential);
+    final userDoc = firestore.doc(FirestorePath.user(user.uid));
+    await userDoc.update({'email': email});
+  }
+
+  @override
+  Future<void> updateEmail(
+      String newEmail, String currentEmail, String currentPassword) async {
+    final credential = EmailAuthProvider.credential(
+        email: currentEmail, password: currentPassword);
+    final authResult = await firebaseAuth.currentUser!
+        .reauthenticateWithCredential(credential);
+
+    final user = authResult.user!;
+    await user.updateEmail(newEmail);
+    final userDoc = firestore.doc(FirestorePath.user(user.uid));
+    await userDoc.update({'email': newEmail});
   }
 }
